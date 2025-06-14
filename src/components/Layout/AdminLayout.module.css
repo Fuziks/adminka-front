@@ -110,7 +110,7 @@
   transform: translateX(5px);
 }
 
-/* Адаптивность */
+
 @media (max-width: 768px) {
   .sidebar {
     width: 220px;

@@ -1,4 +1,4 @@
-/* Основные стили таблицы */
+
 .table {
   width: 100%;
   border-collapse: separate;
@@ -11,7 +11,6 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Заголовки таблицы */
 .table th {
   padding: 14px 16px;
   text-align: left;
@@ -28,7 +27,7 @@
   transition: all 0.2s ease;
 }
 
-/* Ячейки таблицы */
+
 .table td {
   padding: 14px 16px;
   color: #334155;
@@ -36,18 +35,17 @@
   transition: background 0.2s ease;
 }
 
-/* Последняя строка без границы */
+
 .table tr:last-child td {
   border-bottom: none;
 }
 
-/* Эффект при наведении на строку */
+
 .table tr:hover td {
   background-color: #f8fafc;
 }
 
 
-/* Заголовки с сортировкой */
 .sortableHeader {
   cursor: pointer;
   user-select: none;
@@ -76,14 +74,14 @@
   opacity: 1;
 }
 
-/* Контейнер для контента в заголовке */
+
 .headerContent {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* Пагинация */
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -128,7 +126,6 @@
   font-weight: 500;
 }
 
-/* Состояние пустой таблицы */
 .emptyStateContainer {
   display: flex;
   flex-direction: column;
@@ -148,7 +145,7 @@
   font-weight: 500;
 }
 
-/* Индикатор загрузки */
+
 .loadingContainer {
   display: flex;
   flex-direction: column;
@@ -167,7 +164,6 @@
   animation: spin 0.8s linear infinite;
 }
 
-/* Анимации */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -183,7 +179,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Адаптивность */
+
 @media (max-width: 768px) {
   .table th,
   .table td {
@@ -215,15 +211,14 @@
   }
 }
 
-/* Дополнительные улучшения */
 .priceCell {
   font-weight: 600;
-  color: #065f46; /* Зеленый для цен */
+  color: #065f46; 
 }
 
 .brandCell {
   font-weight: 500;
-  color: #1d4ed8; /* Синий для брендов */
+  color: #1d4ed8; 
 }
 
 .actionsCell {

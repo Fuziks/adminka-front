@@ -1,4 +1,3 @@
-/* DeleteConfirmModal.module.css */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -141,7 +140,6 @@
   font-size: 14px;
 }
 
-/* Анимации */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -158,7 +156,6 @@
   }
 }
 
-/* Адаптивность */
 @media (max-width: 480px) {
   .modal {
     max-width: 95%;

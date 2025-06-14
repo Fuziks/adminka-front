@@ -32,7 +32,6 @@
   max-width: 480px;
 }
 
-/* Стили для логотипа */
 .storeLogo {
   margin-bottom: 30px;
   text-align: center;
@@ -53,7 +52,6 @@
   opacity: 1;
 }
 
-/* Заголовок админки */
 .adminTitle {
   display: flex;
   flex-direction: column;
@@ -133,7 +131,6 @@
   transform: translateX(3px);
 }
 
-/* Анимации */
 @keyframes float {
   0%, 100% { transform: perspective(1000px) rotateX(5deg) translateY(0); }
   50% { transform: perspective(1000px) rotateX(5deg) translateY(-10px); }
@@ -162,7 +159,6 @@
   }
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
   .card3d {
     padding: 40px 30px;

@@ -49,13 +49,13 @@
 
 .input {
   width: 100%;
-  padding: 12px 16px; /* Увеличиваем padding для соответствия */
+  padding: 12px 16px; 
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   font-size: 1rem;
   transition: all 0.2s ease;
   background-color: #f8fafc;
-  box-sizing: border-box; /* Добавляем для правильного расчета ширины */
+  box-sizing: border-box; 
 }
 
 .input:focus {

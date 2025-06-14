@@ -1,4 +1,4 @@
-/* Modal.module.css */
+
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -92,7 +92,7 @@
   overflow-y: auto;
 }
 
-/* Анимации */
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -109,7 +109,7 @@
   }
 }
 
-/* Эффекты для модального контента */
+
 .modalContent > * {
   animation: fadeInUp 0.4s ease-out 0.1s both;
 }
@@ -125,7 +125,7 @@
   }
 }
 
-/* Адаптивность */
+
 @media (max-width: 768px) {
   .modal {
     max-width: 95%;

@@ -1,0 +1,146 @@
+.adminLayout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.sidebar {
+  width: 260px;
+  padding: 25px 0;
+  background: linear-gradient(to bottom, #2c3e50, #34495e);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.sidebarHeader {
+  padding: 0 25px 25px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebarHeader h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ecf0f1;
+}
+
+.adminSubtitle {
+  margin: 5px 0 0;
+  font-size: 1rem;
+  color: #bdc3c7;
+  opacity: 0.8;
+}
+
+.navMenu {
+  flex: 1;
+  padding: 15px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  padding: 20px 25px;
+  color: #ecf0f1;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 2rem;
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #3498db;
+}
+
+.navIcon {
+  margin-right: 12px;
+  font-size: 1.1rem;
+}
+
+.logoutContainer {
+  padding: 20px 25px 0;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 24px;
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+  width: 100%;
+  max-width: 250px;
+  margin: 20px auto 0;
+}
+
+.logoutButton:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 5px 25px rgba(239, 68, 68, 0.7);
+  background: linear-gradient(90deg, #dc2626, #b91c1c);
+}
+
+
+.content {
+  flex: 1;
+  padding: 30px;
+  background-color: #f5f7fa;
+  overflow-y: auto;
+}
+
+
+.navItem {
+  transform: translateX(0);
+}
+
+.navItem:hover {
+  transform: translateX(5px);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 220px;
+    padding: 20px 0;
+  }
+  
+  .sidebarHeader {
+    padding: 0 20px 20px;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .adminLayout {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    padding: 15px 0;
+  }
+  
+  .logoutContainer {
+    padding: 15px 15px 0;
+  }
+  
+  .content {
+    padding: 15px;
+  }
+}

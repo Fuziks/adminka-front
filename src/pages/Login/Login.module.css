@@ -1,0 +1,184 @@
+.minimalContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,0.9) 0%, transparent 20%),
+    linear-gradient(to bottom, #f5f7fa 0%, #e0f2fe 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.card3d {
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240, 249, 255, 0.95) 100%);
+  border-radius: 24px;
+  padding: 50px 60px;
+  text-align: center;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.05),
+    0 5px 15px rgba(0, 0, 0, 0.05),
+    inset 0 0 0 1px rgba(255,255,255,0.8);
+  transform-style: preserve-3d;
+  transform: perspective(1000px) rotateX(5deg);
+  animation: 
+    fadeIn 1s ease-out,
+    float 3s ease-in-out infinite;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.5);
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* Стили для логотипа */
+.storeLogo {
+  margin-bottom: 30px;
+  text-align: center;
+  min-height: 80px;
+}
+
+.logoImage {
+  height: 100px;
+  max-width: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  animation: logoAnimation 7s ease-in-out infinite;
+}
+
+.logoLoaded {
+  opacity: 1;
+}
+
+/* Заголовок админки */
+.adminTitle {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
+  line-height: 1;
+}
+
+.adminTitle span:first-child {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: 1px;
+}
+
+.adminTitle span:last-child {
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 2px;
+  margin-top: 5px;
+}
+
+.welcomeText {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.desc {
+  color: #64748b;
+  font-size: 1rem;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.neonBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 32px;
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  margin: 0 auto;
+  width: 100%;
+  max-width: 220px;
+}
+
+.neonBtn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 5px 25px rgba(59, 130, 246, 0.7);
+}
+
+.btnIcon {
+  width: 18px;
+  height: 18px;
+  stroke: white;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: transform 0.3s;
+}
+
+.neonBtn:hover .btnIcon {
+  transform: translateX(3px);
+}
+
+/* Анимации */
+@keyframes float {
+  0%, 100% { transform: perspective(1000px) rotateX(5deg) translateY(0); }
+  50% { transform: perspective(1000px) rotateX(5deg) translateY(-10px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: perspective(1000px) rotateX(5deg) translateY(20px); }
+  to { opacity: 1; transform: perspective(1000px) rotateX(5deg) translateY(0); }
+}
+
+@keyframes logoAnimation {
+  0% {
+    transform: scale(0.5) translateY(0);
+  }
+  25% {
+    transform: scale(0.7) translateY(-5px);
+  }
+  50% {
+    transform: scale(1) translateY(0);
+  }
+  75% {
+    transform: scale(0.7) translateY(-5px);
+  }
+  100% {
+    transform: scale(0.5) translateY(0);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .card3d {
+    padding: 40px 30px;
+    margin: 20px;
+    width: calc(100% - 40px);
+  }
+
+  .adminTitle span:first-child {
+    font-size: 1.5rem;
+  }
+
+  .adminTitle span:last-child {
+    font-size: 1.8rem;
+  }
+
+  .logoImage {
+    height: 50px;
+  }
+}

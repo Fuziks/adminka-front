@@ -1,26 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import AdminLayout from './components/Layout/AdminLayout';
+import Products from './pages/Admin/Products/Products';
+import Categories from './pages/Admin/Categories/Categories';
+import Home from './pages/Home/Home';
+import Login from './pages/Login/Login';
+import { ROUTES } from './utils/routes';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path={ROUTES.LOGIN} element={<Login />} />
+        <Route path={ROUTES.HOME} element={
+          localStorage.getItem('auth') 
+            ? <AdminLayout><Home /></AdminLayout>
+            : <Navigate to={ROUTES.LOGIN} />
+        } />
+        <Route path={ROUTES.PRODUCTS} element={
+          localStorage.getItem('auth')
+            ? <AdminLayout><Products /></AdminLayout>
+            : <Navigate to={ROUTES.LOGIN} />
+        } />
+        <Route path={ROUTES.CATEGORIES} element={
+          localStorage.getItem('auth')
+            ? <AdminLayout><Categories /></AdminLayout>
+            : <Navigate to={ROUTES.LOGIN} />
+        } />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;

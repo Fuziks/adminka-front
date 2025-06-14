@@ -1,0 +1,172 @@
+/* ProductsTable.module.css */
+.tableContainer {
+  background: white;
+  border-radius: 2px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+}
+
+.tableHeader {
+  background: #f8fafc !important;
+  color: #64748b !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.tableContainer table tbody tr {
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.tableContainer table tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+.idCell {
+  color: #64748b;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+.nameCell {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.brandCell {
+  color: #475569;
+}
+
+.priceCell {
+  font-weight: 600;
+  color: #065f46;
+  font-family: monospace;
+}
+
+.categoryCell {
+  padding: 8px 16px !important;
+}
+
+.categoryBadge {
+  background: #f0fdf4;
+  color: #065f46;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  display: inline-block;
+  border: 1px solid #d1fae5;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Обновленные стили для кнопок с Font Awesome */
+.editButton {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.editButton:hover {
+  background: #bae6fd;
+  transform: translateY(-1px);
+}
+
+.deleteButton {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+
+.deleteButton:hover {
+  background: #fecaca;
+  transform: translateY(-1px);
+}
+
+/* Стили для иконок Font Awesome */
+.fa-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+}
+
+.emptyState .fa-icon {
+  margin-bottom: 16px;
+  opacity: 0.6;
+  font-size: 2rem;
+  color: #94a3b8;
+}
+
+.emptyState h4 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  color: #475569;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+
+.checkboxHeader {
+  text-align: center !important;
+  padding: 12px 5px !important;
+}
+
+.checkboxCell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 5px !important;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .editButton,
+  .deleteButton {
+    justify-content: center;
+    padding: 6px;
+  }
+}

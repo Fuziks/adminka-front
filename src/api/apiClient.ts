@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001',
+  baseURL: process.env.REACT_APP_API_URL || 'https://pc-components-backend.onrender.com',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'

@@ -24,20 +24,38 @@
   top: 0;
   z-index: 10;
   border-bottom: 2px solid #e2e8f0;
+  white-space: normal !important;
+  word-break: break-word !important;
   transition: all 0.2s ease;
 }
 
 
 .table td {
-  padding: 14px 16px;
+  padding: 12px 16px;
   color: #334155;
   border-bottom: 1px solid #f1f5f9;
   transition: background 0.2s ease;
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  line-height: 1.4;
+  vertical-align: top; 
 }
 
 
 .table tr:last-child td {
   border-bottom: none;
+}
+
+.textCell {
+  padding: 12px 16px !important;
+}
+
+.categoryBadge {
+  white-space: normal !important;
+  word-break: break-word !important;
+  display: inline-block;
+  max-width: 100%;
 }
 
 

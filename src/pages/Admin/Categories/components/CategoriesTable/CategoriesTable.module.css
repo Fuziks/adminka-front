@@ -14,6 +14,9 @@
   font-size: 12px !important;
   letter-spacing: 0.5px;
   border-bottom: 1px solid #e2e8f0 !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  line-height: 1.4;
 }
 
 .tableContainer table tbody tr {
@@ -36,6 +39,11 @@
   font-weight: 500;
   color: #1e293b;
   padding-left: 16px !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  padding: 12px 16px !important;
+  vertical-align: top;
 }
 
 .actionsCell {
@@ -120,14 +128,20 @@
 }
 
 @media (max-width: 768px) {
+  .tableHeader,
+  .nameCell {
+    padding: 10px 12px !important;
+    font-size: 0.85rem;
+  }
+  
   .actions {
-    flex-direction: column;
+    flex-direction: row; 
     gap: 6px;
   }
   
   .editButton,
   .deleteButton {
-    justify-content: center;
-    padding: 6px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
   }
 }

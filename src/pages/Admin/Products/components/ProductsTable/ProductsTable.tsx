@@ -86,7 +86,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
       sortable: true,
       width: '350px',
       headerClass: styles.tableHeader,
-      cellClass: styles.nameCell
+      cellClass: styles.brandCell,
     },
     { 
       header: 'Бренд', 
@@ -94,7 +94,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
       sortable: true,
       width: '250px',
       headerClass: styles.tableHeader,
-      cellClass: styles.brandCell
+      cellClass: styles.brandCell,
     },
     { 
       header: 'Цена', 
@@ -108,9 +108,9 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
     { 
       header: 'Категория', 
       accessor: 'category',
-      width: '250px',
+      width: '200px',
       headerClass: styles.tableHeader,
-      cellClass: styles.categoryCell,
+      cellClass: styles.brandCell,
       render: (item: Product) => (
         <span className={styles.categoryBadge}>
           {getCategoryName(item.category)}

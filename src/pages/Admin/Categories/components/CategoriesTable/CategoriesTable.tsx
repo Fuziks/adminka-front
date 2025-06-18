@@ -25,7 +25,7 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
       header: 'ID', 
       accessor: 'id',
       sortable: true,
-      width: '80px',
+      width: '75px',
       headerClass: styles.tableHeader,
       cellClass: styles.idCell
     },
@@ -33,7 +33,7 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
       header: 'Название', 
       accessor: 'name',
       sortable: true,
-      width: '600px',
+      width: '900px',
       headerClass: styles.tableHeader,
       cellClass: styles.nameCell
     },
@@ -41,7 +41,7 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
       header: 'Действия', 
       accessor: 'actions',
       width: '200px',
-      headerClass: styles.tableHeader,
+      headerClass: `${styles.tableHeader} ${styles.actionsHeader}`,
       cellClass: styles.actionsCell,
       render: (item: Category) => (
         <div className={styles.actions}>
@@ -54,7 +54,7 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
             aria-label={`Редактировать ${item.name}`}
           >
             <FontAwesomeIcon icon={faEdit} className={styles.icon} />
-            Изменить
+            <span>Изменить</span>
           </button>
           <button 
             className={styles.deleteButton}
@@ -65,11 +65,11 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
             aria-label={`Удалить ${item.name}`}
           >
             <FontAwesomeIcon icon={faTrashAlt} className={styles.icon} />
-            Удалить
+            <span>Удалить</span>
           </button>
         </div>
       )
-    },
+    }
   ];
 
   return (

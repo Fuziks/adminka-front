@@ -17,11 +17,18 @@
   white-space: normal !important;
   word-break: break-word !important;
   line-height: 1.4;
+  text-align: right !important; 
+  padding-right: 16px !important;
 }
 
 .tableContainer table tbody tr {
   transition: background-color 0.2s ease;
   border-bottom: 1px solid #f1f5f9;
+}
+
+.actionsHeader {
+  text-align: right !important;
+  padding-right: 16px !important;
 }
 
 .tableContainer table tbody tr:hover {
@@ -49,12 +56,14 @@
 .actionsCell {
   text-align: right !important;
   padding-right: 16px !important;
+  white-space: nowrap;
 }
 
 .actions {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
+  display: inline-flex; 
+  gap: 20px;
+  justify-content: left;
+  width: 100px;
 }
 
 .editButton {
@@ -69,6 +78,8 @@
   align-items: center;
   gap: 6px;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .editButton:hover {
@@ -88,6 +99,8 @@
   align-items: center;
   gap: 6px;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .deleteButton:hover {

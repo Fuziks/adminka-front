@@ -11,6 +11,8 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Navigate to={ROUTES.LOGIN} replace />} />
+
         <Route path={ROUTES.LOGIN} element={<Login />} />
         <Route path={ROUTES.HOME} element={
           localStorage.getItem('auth') 

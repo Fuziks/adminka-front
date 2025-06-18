@@ -3,7 +3,7 @@ import { Product, SortConfig } from '../../types';
 import Table from '../../../../../components/UI/Table/Table';
 import styles from './ProductsTable.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faBoxOpen, faPen } from '@fortawesome/free-solid-svg-icons';
 
 interface ProductsTableProps {
   products: Product[];
@@ -133,7 +133,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
             }}
             aria-label={`Редактировать ${item.name}`}
           >
-            <FontAwesomeIcon icon={faEdit} className={styles.icon} />
+            <FontAwesomeIcon icon={faPen} className={styles.icon} />
             Изменить
           </button>
           <button 

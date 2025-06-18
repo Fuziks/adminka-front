@@ -20,7 +20,7 @@ import {
   faCheckCircle, 
   faExclamationCircle,
   faPen,
-  faTrash
+  faTrashAlt
 } from '@fortawesome/free-solid-svg-icons';
 
 const ProductsPage: React.FC = () => {
@@ -64,7 +64,7 @@ const ProductsPage: React.FC = () => {
 
   const handleBulkDelete = async () => {
     setIsBulkDeleteConfirmOpen(false);
-    if (selectedIds.length === 0) return;
+    if (selectedIds.length < 2) return;
     
     try {
       await bulkDelete(selectedIds);
@@ -77,7 +77,7 @@ const ProductsPage: React.FC = () => {
   };
 
   const handleBulkUpdate = async (data: { price?: number; categoryId?: number }) => {
-    if (selectedIds.length === 0) return;
+    if (selectedIds.length < 2) return;
     
     try {
       await bulkUpdate(selectedIds, data);
@@ -195,37 +195,37 @@ const ProductsPage: React.FC = () => {
         transition={{ duration: 0.3 }}
       >
         <div className={styles.bulkActions}>
-          <motion.button
+        <motion.button
             className={`${styles.bulkButton} ${styles.bulkEditButton}`}
             onClick={() => setIsBulkEditOpen(true)}
-            disabled={selectedIds.length === 0}
-            whileHover={selectedIds.length > 0 ? { scale: 1.03 } : {}}
-            whileTap={selectedIds.length > 0 ? { scale: 0.98 } : {}}
+            disabled={selectedIds.length < 2}
+            whileHover={selectedIds.length >= 2 ? { scale: 1.03 } : {}}
+            whileTap={selectedIds.length >= 2 ? { scale: 0.98 } : {}}
           >
             <FontAwesomeIcon icon={faPen} className={styles.bulkIcon} />
             Массовое редактирование
-            {selectedIds.length > 0 && (
+            {selectedIds.length > 1 && (
               <span className={styles.badge}>{selectedIds.length}</span>
             )}
-            {selectedIds.length === 0 && (
-              <span className={styles.tooltip}>Выберите товары для массового редактирования</span>
+            {selectedIds.length < 2 && (
+              <span className={styles.tooltip}>Выберите 2 или более товаров для массового редактирования</span>
             )}
           </motion.button>
           
           <motion.button
             className={`${styles.bulkButton} ${styles.bulkDeleteButton}`}
             onClick={() => setIsBulkDeleteConfirmOpen(true)}
-            disabled={selectedIds.length === 0}
-            whileHover={selectedIds.length > 0 ? { scale: 1.03 } : {}}
-            whileTap={selectedIds.length > 0 ? { scale: 0.98 } : {}}
+            disabled={selectedIds.length < 2}
+            whileHover={selectedIds.length >= 2 ? { scale: 1.03 } : {}}
+            whileTap={selectedIds.length >= 2 ? { scale: 0.98 } : {}}
           >
-            <FontAwesomeIcon icon={faTrash} className={styles.bulkIcon} />
+            <FontAwesomeIcon icon={faTrashAlt} className={styles.bulkIcon} />
             Удалить выбранные
-            {selectedIds.length > 0 && (
+            {selectedIds.length > 1 && (
               <span className={styles.badge}>{selectedIds.length}</span>
             )}
-            {selectedIds.length === 0 && (
-              <span className={styles.tooltip}>Выберите товары для удаления</span>
+            {selectedIds.length < 2 && (
+              <span className={styles.tooltip}>Выберите 2 или более товаров для удаления</span>
             )}
           </motion.button>
         </div>

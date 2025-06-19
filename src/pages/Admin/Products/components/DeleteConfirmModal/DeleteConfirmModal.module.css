@@ -51,7 +51,7 @@
 
 .modalTitle {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 600;
   color: #d32f2f;
   flex-grow: 1;
@@ -87,14 +87,14 @@
 
 .warningText {
   margin: 0 0 8px 0;
-  font-size: 1rem;
+  font-size: 16px;
   color: #424242;
   line-height: 1.5;
 }
 
 .warningHint {
   margin: 0 0 24px 0;
-  font-size: 0.875rem;
+  font-size: 14px;
   color: #9e9e9e;
 }
 

@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 1000px;
   background: 
     radial-gradient(circle at 10% 20%, rgba(255,255,255,0.9) 0%, transparent 20%),
     linear-gradient(to bottom, #f5f7fa 0%, #e0f2fe 100%);
@@ -60,14 +60,14 @@
 }
 
 .adminTitle span:first-child {
-  font-size: 1.8rem;
+  font-size: 29px;
   font-weight: 800;
   color: #1e293b;
   letter-spacing: 1px;
 }
 
 .adminTitle span:last-child {
-  font-size: 2.2rem;
+  font-size: 35px;
   font-weight: 800;
   background: linear-gradient(90deg, #3b82f6, #8b5cf6);
   -webkit-background-clip: text;
@@ -78,16 +78,16 @@
 }
 
 .welcomeText {
-  font-size: 1.5rem;
+  font-size: 24px;
   font-weight: 600;
   color: #1e293b;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .desc {
   color: #64748b;
-  font-size: 1rem;
-  margin-bottom: 2.5rem;
+  font-size: 16px;
+  margin-bottom: 40px;
   line-height: 1.6;
 }
 
@@ -101,7 +101,7 @@
   color: white;
   border: none;
   border-radius: 50px;
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s;
@@ -167,11 +167,11 @@
   }
 
   .adminTitle span:first-child {
-    font-size: 1.5rem;
+    font-size: 24px;
   }
 
   .adminTitle span:last-child {
-    font-size: 1.8rem;
+    font-size: 29px;
   }
 
   .logoImage {

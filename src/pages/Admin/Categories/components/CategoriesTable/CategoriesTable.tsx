@@ -3,7 +3,7 @@ import { Category, SortConfig } from '../../types';
 import Table from '../../../../../components/UI/Table/Table';
 import styles from './CategoriesTable.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faBoxOpen, faPen } from '@fortawesome/free-solid-svg-icons';
 
 interface CategoriesTableProps {
   categories: Category[];
@@ -53,7 +53,7 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
             }}
             aria-label={`Редактировать ${item.name}`}
           >
-            <FontAwesomeIcon icon={faEdit} className={styles.icon} />
+            <FontAwesomeIcon icon={faPen} className={styles.icon} />
             <span>Изменить</span>
           </button>
           <button 

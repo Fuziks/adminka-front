@@ -22,7 +22,7 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   width: 800px;
   max-width: 90%;
-  max-height: 100vh;
+  max-height: 1000px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -57,7 +57,7 @@
 
 .modalTitle {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 600;
   color: #1a1a1a;
 }
@@ -129,7 +129,7 @@
 @media (max-width: 768px) {
   .modal {
     max-width: 95%;
-    max-height: 95vh;
+    max-height: 950px;
   }
   
   .modalHeader {
@@ -151,7 +151,7 @@
   }
   
   .modalTitle {
-    font-size: 1.1rem;
+    font-size: 17px;
   }
   
   .closeButton {

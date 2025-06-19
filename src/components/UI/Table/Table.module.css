@@ -17,7 +17,7 @@
   background-color: #f8fafc;
   color: #64748b;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   position: sticky;
@@ -121,7 +121,7 @@
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 0.9rem;
+  font-size: 15px;
   min-width: 36px;
 }
 
@@ -159,7 +159,7 @@
 
 .defaultEmptyState {
   color: #64748b;
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 500;
 }
 
@@ -202,7 +202,7 @@
   .table th,
   .table td {
     padding: 10px 12px;
-    font-size: 0.85rem;
+    font-size: 14px;
   }
   
   .pagination {
@@ -225,7 +225,7 @@
   .navButton {
     padding: 5px 10px;
     min-width: 32px;
-    font-size: 0.8rem;
+    font-size: 13px;
   }
 }
 
@@ -247,7 +247,7 @@
 .actionButton {
   padding: 6px 12px;
   border-radius: 6px;
-  font-size: 0.85rem;
+  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 4px;

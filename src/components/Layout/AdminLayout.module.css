@@ -1,6 +1,6 @@
 .adminLayout {
   display: flex;
-  min-height: 100vh;
+  min-height: 1000px;
   background-color: #f5f7fa;
 }
 
@@ -21,14 +21,14 @@
 
 .sidebarHeader h3 {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 22px;
   font-weight: 600;
   color: #ecf0f1;
 }
 
 .adminSubtitle {
   margin: 5px 0 0;
-  font-size: 1rem;
+  font-size: 16px;
   color: #bdc3c7;
   opacity: 0.8;
 }
@@ -47,7 +47,7 @@
   color: #ecf0f1;
   text-decoration: none;
   transition: all 0.2s ease;
-  font-size: 2rem;
+  font-size: 32px;
 }
 
 .navItem:hover {
@@ -57,7 +57,7 @@
 
 .navIcon {
   margin-right: 12px;
-  font-size: 1.1rem;
+  font-size: 18rem;
 }
 
 .logoutContainer {

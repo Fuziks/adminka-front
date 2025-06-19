@@ -173,7 +173,7 @@ const ProductsPage: React.FC = () => {
       <div className={styles.header}>
         <h2 className={styles.pageTitle}>Управление товарами</h2>
         <div className={styles.controls}>
-          <Link to="/" className={styles.backLink}>
+          <Link to="/home" className={styles.backLink}>
             <FontAwesomeIcon icon={faArrowLeft} className={styles.icon} />
             На главную
           </Link>

@@ -10,6 +10,7 @@ import {
   UpdateProductDto
 } from '../../../../api/products';
 import { Product, Pagination, SortConfig } from '../types';
+import apiClient from '../../../../api/apiClient';
 
 export const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -121,15 +122,17 @@ export const useProducts = () => {
   const bulkUpdateHandler = useCallback(async (
     ids: number[], 
     updateData: Partial<UpdateProductDto>
-  ) => {
+  ): Promise<void> => {
     try {
       setLoading(true);
-      await bulkUpdateProducts(ids, updateData);
+      await apiClient.post('/products/bulk-update', { 
+        ids, 
+        ...updateData 
+      });
       setSuccessMessage(`Успешно обновлено ${ids.length} товаров`);
       fetchProducts(pagination.page, pagination.limit);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Ошибка изменения';
-      setError(errorMessage);
+      setError('Ошибка массового обновления');
       throw err;
     } finally {
       setLoading(false);

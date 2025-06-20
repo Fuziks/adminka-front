@@ -1,12 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from './CategoryForm.module.css';
-
-interface CategoryFormProps {
-    category?: any;
-    onSubmit: (data: any) => void;
-    onCancel: () => void;
-}
+import { CategoryFormProps } from '../../types'
 
 const CategoryForm: React.FC<CategoryFormProps> = ({ 
     category, 

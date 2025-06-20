@@ -1,32 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import styles from './Table.module.css';
-
-interface Column {
-  header: string | React.ReactNode;
-  accessor: string;
-  sortable?: boolean;
-  render?: (item: any) => React.ReactNode;
-  width?: string;
-}
-
-interface TableProps {
-  data: any[];
-  columns: Column[];
-  onSort?: (key: string, direction: 'asc' | 'desc') => void;
-  sortConfig?: {
-    key: string;
-    direction: 'asc' | 'desc';
-  };
-  pagination?: {
-    page: number;
-    limit: number;
-    total: number;
-    onChange: (page: number) => void;
-  };
-  isLoading?: boolean;
-  emptyState?: React.ReactNode;
-}
+import { TableProps } from '../types'
 
 const Table: React.FC<TableProps> = ({ 
   data, 

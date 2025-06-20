@@ -2,17 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from './ProductForm.module.css';
 import { motion } from 'framer-motion';
 import { checkProductName } from '../../../../../api/products';
-
-interface ProductFormProps {
-    product?: any;
-    categories: any[];
-    onSubmit: (data: any, shouldClose: boolean) => void;
-    onCancel: () => void;
-}
-
-interface CheckNameResponse {
-    exists: boolean;
-}
+import { ProductFormProps, CheckNameResponse } from '../../types'
 
 const ProductForm: React.FC<ProductFormProps> = ({ 
     product, 

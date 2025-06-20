@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import styles from './BulkEditModal.module.css';
-
-interface BulkEditModalProps {
-  isOpen: boolean;
-  selectedCount: number;
-  categories: any[];
-  onClose: () => void;
-  onConfirm: (data: { price?: number; categoryId?: number }) => Promise<void>;
-}
+import { BulkEditModalProps } from '../../types'
 
 const BulkEditModal: React.FC<BulkEditModalProps> = ({
   isOpen,

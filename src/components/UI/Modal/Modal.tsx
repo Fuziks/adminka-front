@@ -2,14 +2,7 @@ import React, { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import styles from './Modal.module.css';
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-  title?: string;
-  size?: 'sm' | 'md' | 'lg';
-}
+import { ModalProps } from '../types'
 
 const Modal: React.FC<ModalProps> = ({ 
   isOpen, 

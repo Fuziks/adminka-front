@@ -4,14 +4,7 @@ import Table from '../../../../../components/UI/Table/Table';
 import styles from './CategoriesTable.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faBoxOpen, faPen } from '@fortawesome/free-solid-svg-icons';
-
-interface CategoriesTableProps {
-  categories: Category[];
-  sortConfig: SortConfig;
-  onSort: (key: string, direction: 'asc' | 'desc') => void;
-  onEdit: (category: Category) => void;
-  onDelete: (id: number) => void;
-}
+import { CategoriesTableProps } from '../../types'
 
 const CategoriesTable: React.FC<CategoriesTableProps> = ({
   categories,

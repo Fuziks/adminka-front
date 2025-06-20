@@ -2,13 +2,8 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import styles from './BulkDeleteConfirmModal.module.css';
+import { BulkDeleteConfirmModalProps } from '../../types'
 
-interface BulkDeleteConfirmModalProps {
-  isOpen: boolean;
-  selectedCount: number;
-  onClose: () => void;
-  onConfirm: () => void;
-}
 
 const BulkDeleteConfirmModal: React.FC<BulkDeleteConfirmModalProps> = ({ 
   isOpen, 

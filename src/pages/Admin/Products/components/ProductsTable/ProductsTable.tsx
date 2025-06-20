@@ -4,17 +4,8 @@ import Table from '../../../../../components/UI/Table/Table';
 import styles from './ProductsTable.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faBoxOpen, faPen } from '@fortawesome/free-solid-svg-icons';
+import { ProductsTableProps } from '../../types'
 
-interface ProductsTableProps {
-  products: Product[];
-  sortConfig: SortConfig;
-  selectedIds: number[];
-  onSort: (key: string, direction: 'asc' | 'desc') => void;
-  onEdit: (product: Product) => void;
-  onDelete: (id: number) => void;
-  onSelect: (id: number, isSelected: boolean) => void;
-  onSelectAll: (isSelected: boolean) => void;
-}
 
 const ProductsTable: React.FC<ProductsTableProps> = ({
   products,

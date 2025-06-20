@@ -2,13 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import styles from './DeleteConfirmModal.module.css';
-
-interface DeleteConfirmModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  itemName?: string;
-}
+import { DeleteConfirmModalProps } from '../../types'
 
 const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({ 
   isOpen, 

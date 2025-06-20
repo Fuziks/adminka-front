@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './ProductForm.module.css';
+import apiClient from '../../../../../api/apiClient';
+import { motion } from 'framer-motion';
 
 interface ProductFormProps {
     product?: any;
     categories: any[];
-    onSubmit: (data: any) => void;
+    onSubmit: (data: any, shouldClose: boolean) => void;
     onCancel: () => void;
+}
+
+interface CheckNameResponse {
+    exists: boolean;
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ 
@@ -20,6 +26,11 @@ const ProductForm: React.FC<ProductFormProps> = ({
         price: '',
         categoryId: ''
     });
+    const [nameError, setNameError] = useState('');
+    const [isChecking, setIsChecking] = useState(false);
+    const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
+    const [shakeButtons, setShakeButtons] = useState(false);
+    const nameInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (product) {
@@ -32,14 +43,59 @@ const ProductForm: React.FC<ProductFormProps> = ({
         }
     }, [product]);
 
+    const checkProductExists = async (name: string) => {
+        if (!name || name.length < 3) { 
+            setNameError('');
+            return false;
+        }
+    
+        try {
+            setIsChecking(true);
+            const response = await apiClient.get<CheckNameResponse>(`/products/check-name/${encodeURIComponent(name)}`);
+            return response.data.exists;
+        } catch (err) {
+            console.error('Ошибка проверки имени:', err);
+            return false;
+        } finally {
+            setIsChecking(false);
+            nameInputRef.current?.focus();
+        }
+    };
+    
+    const handleNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setFormData(prev => ({ ...prev, name: value }));
+        
+        if (typingTimeout) {
+            clearTimeout(typingTimeout);
+        }
+        
+        const newTimeout = setTimeout(async () => {
+            const exists = await checkProductExists(value);
+            setNameError(exists ? 'Товар с таким названием уже существует' : '');
+        }, 500); 
+        
+        setTypingTimeout(newTimeout);
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const triggerShake = () => {
+        setShakeButtons(true);
+        setTimeout(() => setShakeButtons(false), 500);
+    };
+
+    const handleSubmit = async (e: React.FormEvent, shouldClose: boolean = true) => {
         e.preventDefault();
         
+        if (nameError) {
+            triggerShake();
+            return;
+        }
+
         const submitData = {
             name: formData.name,
             brand: formData.brand,
@@ -47,55 +103,64 @@ const ProductForm: React.FC<ProductFormProps> = ({
             categoryId: formData.categoryId ? parseInt(formData.categoryId) : null
         };
         
-        onSubmit(submitData);
+        onSubmit(submitData, shouldClose);
+    };
+
+    const handleSaveAndAdd = (e: React.MouseEvent) => {
+        e.preventDefault();
+        handleSubmit(e, false);
     };
 
     return (
-        <form onSubmit={handleSubmit} className={styles.productForm}>
+        <form onSubmit={(e) => handleSubmit(e, true)} className={styles.productForm}>
             <h3 className={styles.formTitle}>{product ? 'Редактировать товар' : 'Добавить товар'}</h3>
             
             <div className={styles.formGroup}>
-    <label className={styles.inputLabel}>Название товара</label>
-    <input
-        type="text"
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        className={`${styles.textInput} ${styles.fullWidth}`}
-        required
-        placeholder="Введите название"
-    />
-</div>
+                <label className={styles.inputLabel}>Название товара</label>
+                <input
+                    ref={nameInputRef}
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleNameChange}
+                    className={`${styles.textInput} ${styles.fullWidth}`}
+                    required
+                    placeholder="Введите название"
+                    disabled={isChecking}
+                    autoFocus
+                />
+                {nameError && <div className={styles.errorText}>{nameError}</div>}
+            </div>
 
-<div className={styles.formGroup}>
-    <label className={styles.inputLabel}>Бренд</label>
-    <input
-        type="text"
-        name="brand"
-        value={formData.brand}
-        onChange={handleChange}
-        className={`${styles.textInput} ${styles.fullWidth}`}
-        placeholder="Введите бренд"
-    />
-</div>
+            <div className={styles.formGroup}>
+                <label className={styles.inputLabel}>Бренд</label>
+                <input
+                    type="text"
+                    name="brand"
+                    value={formData.brand}
+                    onChange={handleChange}
+                    className={`${styles.textInput} ${styles.fullWidth}`}
+                    placeholder="Введите бренд"
+                />
+            </div>
 
-<div className={styles.formGroup}>
-    <label className={styles.inputLabel}>Цена (руб.)</label>
-    <div className={styles.priceInputContainer}>
-        <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className={`${styles.numberInput} ${styles.fullWidth}`}
-            min="0.01"
-            step="0.01"
-            placeholder="0.00"
-        />
-        <span className={styles.currencySymbol}>₽</span>
-    </div>
-</div>
-
+            <div className={styles.formGroup}>
+                <label className={styles.inputLabel}>Цена (руб.)</label>
+                <div className={styles.priceInputContainer}>
+                    <input
+                        type="number"
+                        name="price"
+                        value={formData.price}
+                        onChange={handleChange}
+                        className={`${styles.numberInput} ${styles.fullWidth}`}
+                        min="0.01"
+                        step="0.01"
+                        placeholder="0.00"
+                        required
+                    />
+                    <span className={styles.currencySymbol}>₽</span>
+                </div>
+            </div>
 
             <div className={styles.formGroup}>
                 <label className={styles.inputLabel}>Категория</label>
@@ -125,9 +190,29 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 <button type="button" onClick={onCancel} className={styles.cancelButton}>
                     Отмена
                 </button>
-                <button type="submit" className={styles.submitButton}>
+                {!product && (
+                    <motion.button 
+                        type="button"
+                        onClick={handleSaveAndAdd}
+                        className={styles.saveAndAddButton}
+                        animate={shakeButtons ? { 
+                            x: [0, -10, 10, -10, 10, 0],
+                            transition: { duration: 0.5 }
+                        } : {}}
+                    >
+                        Сохранить и добавить еще
+                    </motion.button>
+                )}
+                <motion.button 
+                    type="submit"
+                    className={styles.submitButton}
+                    animate={shakeButtons ? { 
+                        x: [0, -10, 10, -10, 10, 0],
+                        transition: { duration: 0.5 }
+                    } : {}}
+                >
                     {product ? 'Сохранить изменения' : 'Добавить товар'}
-                </button>
+                </motion.button>
             </div>
         </form>
     );

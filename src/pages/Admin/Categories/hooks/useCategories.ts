@@ -10,7 +10,6 @@ import {
 import { Category, Pagination, SortConfig } from '../types';
 import apiClient from '../../../../api/apiClient';
 
-
 export const useCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +18,16 @@ export const useCategories = () => {
   const [pagination, setPagination] = useState<Pagination>({ page: 1, limit: 10, total: 0 });
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'id', direction: 'asc' });
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+
+  const showSuccess = useCallback((message: string) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(''), 5000);
+  }, []);
+
+  const showError = useCallback((message: string) => {
+    setError(message);
+    setTimeout(() => setError(''), 5000);
+  }, []);
 
   const fetchCategories = useCallback(async (
     page: number, 
@@ -43,16 +52,12 @@ export const useCategories = () => {
       }));
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Ошибка загрузки категорий';
-      setError(errorMessage);
+      showError(errorMessage);
       console.error('Ошибка при загрузке категорий:', err);
     } finally {
       setLoading(false);
     }
-  }, [sortConfig.key, sortConfig.direction]);
-
-  useEffect(() => {
-    fetchCategories(pagination.page, pagination.limit);
-  }, [fetchCategories, pagination.limit]);
+  }, [sortConfig.key, sortConfig.direction, showError]);
 
   const createCategoryHandler = useCallback(async (categoryData: CreateCategoryDto) => {
     try {
@@ -61,25 +66,25 @@ export const useCategories = () => {
         throw new Error('Название категории не может быть пустым');
       }
       const createdCategory = await createCategory(categoryData);
-      setSuccessMessage('Категория успешно создана');
+      showSuccess('Категория успешно создана');
       fetchCategories(pagination.page, pagination.limit);
       return createdCategory;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Ошибка создания категории';
-      setError(errorMessage);
+      showError(errorMessage);
       throw err;
     } finally {
       setLoading(false);
     }
-  }, [fetchCategories, pagination.page, pagination.limit]);
+  }, [fetchCategories, pagination.page, pagination.limit, showSuccess, showError]);
 
-  const updateCategoryHandler = useCallback(async (id: number, categoryData: { name: string }) => {
+  const updateCategoryHandler = useCallback(async (id: number, categoryData: UpdateCategoryDto) => {
     try {
       setLoading(true);
       const response = await apiClient.put<Category>(`/categories/${id}`, {
         name: categoryData.name.trim()
       });
-      setSuccessMessage('Категория успешно обновлена');
+      showSuccess('Категория успешно обновлена');
       await fetchCategories(pagination.page, pagination.limit);
       return response.data;
     } catch (err) {
@@ -92,7 +97,6 @@ export const useCategories = () => {
         message?: string
       };
   
-
       let errorMessage = 'Ошибка обновления категории';
       
       if (error.response?.data?.message) {
@@ -103,27 +107,31 @@ export const useCategories = () => {
         errorMessage = error.message;
       }
   
-      setError(errorMessage);
+      showError(errorMessage);
       throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }
-  }, [fetchCategories, pagination.page, pagination.limit]);
+  }, [fetchCategories, pagination.page, pagination.limit, showSuccess, showError]);
 
   const deleteCategoryHandler = useCallback(async (id: number) => {
     try {
       setLoading(true);
       await deleteCategory(id);
-      setSuccessMessage('Категория успешно удалена');
+      showSuccess('Категория успешно удалена');
       fetchCategories(pagination.page, pagination.limit);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Ошибка удаления категории';
-      setError(errorMessage);
+      showError(errorMessage);
       throw err;
     } finally {
       setLoading(false);
     }
-  }, [fetchCategories, pagination.page, pagination.limit]);
+  }, [fetchCategories, pagination.page, pagination.limit, showSuccess, showError]);
+
+  useEffect(() => {
+    fetchCategories(pagination.page, pagination.limit);
+  }, [fetchCategories, pagination.limit]);
 
   return {
     categories,
@@ -137,8 +145,6 @@ export const useCategories = () => {
     createCategory: createCategoryHandler,
     updateCategory: updateCategoryHandler,
     deleteCategory: deleteCategoryHandler,
-    setError,
-    setSuccessMessage,
     setSortConfig,
     setSelectedCategories,
     setPagination

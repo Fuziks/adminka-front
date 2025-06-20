@@ -26,11 +26,9 @@ const CategoriesPage: React.FC = () => {
     pagination,
     sortConfig,
     fetchCategories,
-    createCategory, 
-    updateCategory, 
-    deleteCategory, 
-    setError,
-    setSuccessMessage,
+    createCategory,
+    updateCategory,
+    deleteCategory,
     setSortConfig,
     setPagination
   } = useCategories();
@@ -67,52 +65,36 @@ const CategoriesPage: React.FC = () => {
 
   const confirmDelete = async () => {
     if (categoryToDelete) {
-      try {
-        await deleteCategory(categoryToDelete);
-        setSuccessMessage('Категория успешно удалена');
-        fetchCategories(pagination.page, pagination.limit);
-      } catch (err) {
-        setError('Ошибка удаления категории');
-      }
+      await deleteCategory(categoryToDelete);
       setIsDeleteConfirmOpen(false);
     }
   };
 
   const handleSubmit = async (categoryData: { name: string }) => {
-    try {
-      const exists = categories.some(c => 
-        c.name.toLowerCase() === categoryData.name.toLowerCase() && 
-        (!currentCategory || c.id !== currentCategory.id)
-      );
-      
-      if (exists) {
-        setError('Категория с таким названием уже существует');
-        return;
-      }
-  
-      if (currentCategory) {
-        await updateCategory(currentCategory.id, categoryData);
-        setSuccessMessage('Категория успешно обновлена');
-      } else {
-        await createCategory(categoryData);
-        setSuccessMessage('Категория успешно добавлена');
-      }
-      setIsModalOpen(false);
-      fetchCategories(pagination.page, pagination.limit);
-    } catch (err) {
-      setError(currentCategory ? 'Ошибка обновления категории' : 'Ошибка создания категории');
+    const exists = categories.some(c => 
+      c.name.toLowerCase() === categoryData.name.toLowerCase() && 
+      (!currentCategory || c.id !== currentCategory.id)
+    );
+    
+    if (exists) {
+      return false;
     }
+  
+    if (currentCategory) {
+      await updateCategory(currentCategory.id, categoryData);
+    } else {
+      await createCategory(categoryData);
+    }
+    setIsModalOpen(false);
+    return true;
   };
 
   const handleLimitChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newLimit = Number(e.target.value);
     setIsChangingLimit(true);
-    
     await new Promise(resolve => setTimeout(resolve, 300));
-    
     setPagination(prev => ({ ...prev, limit: newLimit, page: 1 }));
     await fetchCategories(1, newLimit, sortConfig.key, sortConfig.direction);
-    
     setIsChangingLimit(false);
   };
 
@@ -230,7 +212,7 @@ const CategoriesPage: React.FC = () => {
       <Snackbar
         open={!!successMessage}
         autoHideDuration={6000}
-        onClose={() => setSuccessMessage('')}
+        onClose={() => {}}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <motion.div
@@ -250,7 +232,7 @@ const CategoriesPage: React.FC = () => {
       <Snackbar
         open={!!error}
         autoHideDuration={6000}
-        onClose={() => setError('')}
+        onClose={() => {}}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <motion.div

@@ -11,7 +11,6 @@ import Modal from '../../../components/UI/Modal/Modal';
 import ProductForm from './components/ProductForm/ProductForm';
 import { Product } from './types';
 import styles from './Products.module.css';
-import { createProduct, deleteProduct, updateProduct } from '../../../api/products';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -32,10 +31,11 @@ const ProductsPage: React.FC = () => {
     pagination,
     sortConfig,
     fetchProducts,
+    createProduct,
+    updateProduct,
+    deleteProduct,
     bulkDelete,
     bulkUpdate,
-    setError,
-    setSuccessMessage,
     setSortConfig,
     setPagination
   } = useProducts();
@@ -49,6 +49,7 @@ const ProductsPage: React.FC = () => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isBulkEditOpen, setIsBulkEditOpen] = useState(false);
   const [isBulkDeleteConfirmOpen, setIsBulkDeleteConfirmOpen] = useState(false);
+  const [formData, setFormData] = useState({name: '', brand: '', price: '', categoryId: ''});
 
   const handleSelect = (id: number, isSelected: boolean) => {
     setSelectedIds(prev => 
@@ -65,28 +66,14 @@ const ProductsPage: React.FC = () => {
   const handleBulkDelete = async () => {
     setIsBulkDeleteConfirmOpen(false);
     if (selectedIds.length < 2) return;
-    
-    try {
-      await bulkDelete(selectedIds);
-      setSuccessMessage(`Успешно удалено ${selectedIds.length} товаров`);
-      setSelectedIds([]);
-      fetchProducts(pagination.page, pagination.limit);
-    } catch (err) {
-      setError('Ошибка массового удаления');
-    }
+    await bulkDelete(selectedIds);
+    setSelectedIds([]);
   };
 
   const handleBulkUpdate = async (data: { price?: number; categoryId?: number }) => {
     if (selectedIds.length < 2) return;
-    
-    try {
-      await bulkUpdate(selectedIds, data);
-      setSuccessMessage(`Успешно обновлено ${selectedIds.length} товаров`);
-      setIsBulkEditOpen(false);
-      fetchProducts(pagination.page, pagination.limit);
-    } catch (err) {
-      setError('Ошибка изменения');
-    }
+    await bulkUpdate(selectedIds, data);
+    setIsBulkEditOpen(false);
   };
 
   const handlePageChange = (page: number) => {
@@ -115,42 +102,41 @@ const ProductsPage: React.FC = () => {
 
   const confirmDelete = async () => {
     if (productToDelete) {
-      try {
-        await deleteProduct(productToDelete);
-        setSuccessMessage('Товар успешно удален');
-        fetchProducts(pagination.page, pagination.limit);
-      } catch (err) {
-        setError('Ошибка удаления товара');
-      }
+      await deleteProduct(productToDelete);
       setIsDeleteConfirmOpen(false);
     }
   };
 
-  const handleSubmit = async (productData: any) => {
+  const handleSubmit = async (productData: any, shouldClose: boolean = true) => {
     try {
-      if (currentProduct) {
-        await updateProduct(currentProduct.id, productData);
-        setSuccessMessage('Товар успешно обновлен');
-      } else {
-        await createProduct(productData);
-        setSuccessMessage('Товар успешно добавлен');
-      }
-      setIsModalOpen(false);
-      fetchProducts(pagination.page, pagination.limit);
+        if (currentProduct) {
+            await updateProduct(currentProduct.id, productData);
+            setIsModalOpen(false);
+        } else {
+            await createProduct(productData);
+            if (shouldClose) {
+                setIsModalOpen(false);
+            } else {
+                setCurrentProduct(null);
+                setFormData({
+                    name: '',
+                    brand: '',
+                    price: '',
+                    categoryId: ''
+                });
+            }
+        }
     } catch (err) {
-      setError(currentProduct ? 'Ошибка обновления товара' : 'Ошибка создания товара');
+        console.error('Ошибка при сохранении товара:', err);
     }
-  };
+};
 
   const handleLimitChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newLimit = Number(e.target.value);
     setIsChangingLimit(true);
-    
     await new Promise(resolve => setTimeout(resolve, 300));
-    
     setPagination(prev => ({ ...prev, limit: newLimit, page: 1 }));
     await fetchProducts(1, newLimit, sortConfig.key, sortConfig.direction);
-    
     setIsChangingLimit(false);
   };
 
@@ -329,7 +315,7 @@ const ProductsPage: React.FC = () => {
       <Snackbar
         open={!!successMessage}
         autoHideDuration={6000}
-        onClose={() => setSuccessMessage('')}
+        onClose={() => {}}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <motion.div
@@ -349,7 +335,7 @@ const ProductsPage: React.FC = () => {
       <Snackbar
         open={!!error}
         autoHideDuration={6000}
-        onClose={() => setError('')}
+        onClose={() => {}}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <motion.div

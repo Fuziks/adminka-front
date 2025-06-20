@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './ProductForm.module.css';
-import apiClient from '../../../../../api/apiClient';
 import { motion } from 'framer-motion';
+import { checkProductName } from '../../../../../api/products';
 
 interface ProductFormProps {
     product?: any;
@@ -51,8 +51,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
     
         try {
             setIsChecking(true);
-            const response = await apiClient.get<CheckNameResponse>(`/products/check-name/${encodeURIComponent(name)}`);
-            return response.data.exists;
+            const response = await checkProductName(name);
+            return response.exists;
         } catch (err) {
             console.error('Ошибка проверки имени:', err);
             return false;

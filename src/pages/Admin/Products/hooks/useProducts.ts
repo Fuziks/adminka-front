@@ -6,11 +6,11 @@ import {
   deleteProduct,
   bulkDeleteProducts,
   bulkUpdateProducts,
+  checkProductName,
   CreateProductDto,
   UpdateProductDto
 } from '../../../../api/products';
 import { Product, Pagination, SortConfig } from '../types';
-import apiClient from '../../../../api/apiClient';
 
 export const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -60,6 +60,16 @@ export const useProducts = () => {
     }
   }, [sortConfig.key, sortConfig.direction, showError]);
 
+  const checkProductExists = async (name: string) => {
+    try {
+      const response = await checkProductName(name);
+      return response.exists;
+    } catch (err) {
+      console.error('Ошибка проверки имени товара:', err);
+      return false;
+    }
+  };
+
   const createProductHandler = useCallback(async (productData: CreateProductDto) => {
     try {
       setLoading(true);
@@ -72,13 +82,7 @@ export const useProducts = () => {
       return createdProduct;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Ошибка создания товара';
-
-      if (errorMessage.includes('уже существует')) {
-        showError(errorMessage);
-      } else {
-        showError(errorMessage);
-      }
-      
+      showError(errorMessage);
       throw err;
     } finally {
       setLoading(false);
@@ -98,13 +102,7 @@ export const useProducts = () => {
       return updatedProduct;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Ошибка обновления товара';
-      
-      if (errorMessage.includes('уже существует')) {
-        showError(errorMessage);
-      } else {
-        showError(errorMessage);
-      }
-      
+      showError(errorMessage);
       throw err;
     } finally {
       setLoading(false);
@@ -147,10 +145,7 @@ export const useProducts = () => {
   ): Promise<void> => {
     try {
       setLoading(true);
-      await apiClient.post('/products/bulk-update', { 
-        ids, 
-        ...updateData 
-      });
+      await bulkUpdateProducts(ids, updateData);
       showSuccess(`Успешно обновлено ${ids.length} товаров`);
       fetchProducts(pagination.page, pagination.limit);
     } catch (err) {
@@ -178,6 +173,9 @@ export const useProducts = () => {
     deleteProduct: deleteProductHandler,
     bulkDelete: bulkDeleteHandler,
     bulkUpdate: bulkUpdateHandler,
+    checkProductExists,
+    setError,
+    setSuccessMessage,
     setSortConfig,
     setPagination
   };

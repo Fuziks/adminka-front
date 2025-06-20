@@ -4,11 +4,11 @@ import {
   createCategory, 
   updateCategory, 
   deleteCategory,
+  checkCategoryName,
   CreateCategoryDto,
   UpdateCategoryDto
 } from '../../../../api/categories';
 import { Category, Pagination, SortConfig } from '../types';
-import apiClient from '../../../../api/apiClient';
 
 export const useCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -59,6 +59,16 @@ export const useCategories = () => {
     }
   }, [sortConfig.key, sortConfig.direction, showError]);
 
+  const checkCategoryExists = async (name: string) => {
+    try {
+      const response = await checkCategoryName(name);
+      return response.exists;
+    } catch (err) {
+      console.error('Ошибка проверки имени категории:', err);
+      return false;
+    }
+  };
+
   const createCategoryHandler = useCallback(async (categoryData: CreateCategoryDto) => {
     try {
       setLoading(true);
@@ -81,12 +91,10 @@ export const useCategories = () => {
   const updateCategoryHandler = useCallback(async (id: number, categoryData: UpdateCategoryDto) => {
     try {
       setLoading(true);
-      const response = await apiClient.put<Category>(`/categories/${id}`, {
-        name: categoryData.name.trim()
-      });
+      const updatedCategory = await updateCategory(id, categoryData);
       showSuccess('Категория успешно обновлена');
       await fetchCategories(pagination.page, pagination.limit);
-      return response.data;
+      return updatedCategory;
     } catch (err) {
       const error = err as {
         response?: {
@@ -145,6 +153,7 @@ export const useCategories = () => {
     createCategory: createCategoryHandler,
     updateCategory: updateCategoryHandler,
     deleteCategory: deleteCategoryHandler,
+    checkCategoryExists,
     setSortConfig,
     setSelectedCategories,
     setPagination

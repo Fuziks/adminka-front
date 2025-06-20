@@ -32,6 +32,10 @@ export interface UpdateProductDto {
   categoryId?: number | null;
 }
 
+export interface CheckNameResponse {
+  exists: boolean;
+}
+
 export const getProducts = async (
   page = 1,
   limit = 10,
@@ -75,4 +79,9 @@ export const bulkUpdateProducts = async (
   updateData: Partial<UpdateProductDto>
 ): Promise<void> => {
   await apiClient.post('/products/bulk-update', { ids, ...updateData });
+};
+
+export const checkProductName = async (name: string): Promise<CheckNameResponse> => {
+  const response = await apiClient.get<CheckNameResponse>(`/products/check-name/${encodeURIComponent(name)}`);
+  return response.data;
 };

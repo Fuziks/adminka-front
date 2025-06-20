@@ -39,21 +39,19 @@ export const createCategory = async (categoryData: CreateCategoryDto): Promise<C
 
 export const updateCategory = async (
   id: number, 
-  categoryData: { name: string }
+  categoryData: UpdateCategoryDto
 ): Promise<Category> => {
-
-  const cleanData = { 
-    name: categoryData.name 
-  };
-  
-  const response = await apiClient.put<Category>(
-    `/categories/${id}`,
-    cleanData
-  );
-  
+  const response = await apiClient.put<Category>(`/categories/${id}`, {
+    name: categoryData.name.trim()
+  });
   return response.data;
 };
 
 export const deleteCategory = async (id: number): Promise<void> => {
   await apiClient.delete(`/categories/${id}`);
+};
+
+export const checkCategoryName = async (name: string): Promise<{ exists: boolean }> => {
+  const response = await apiClient.get<{ exists: boolean }>(`/categories/check-name/${encodeURIComponent(name)}`);
+  return response.data;
 };

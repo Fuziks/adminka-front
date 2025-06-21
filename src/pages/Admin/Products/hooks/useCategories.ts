@@ -20,7 +20,7 @@ export const useCategories = () => {
         await fetchCategories(page + 1, limit);
       }
     } catch (error) {
-      console.error('Failed to load categories:', error);
+      console.error('Ошибка загрузки категорий:', error);
     } finally {
       setIsLoading(false);
     }

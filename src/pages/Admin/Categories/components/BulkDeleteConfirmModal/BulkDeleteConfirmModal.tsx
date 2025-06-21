@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle, faTimes, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faTimes, faTrash, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import styles from './BulkDeleteConfirmModal.module.css';
 import { BulkDeleteConfirmModalProps } from '../../types';
 
@@ -8,7 +8,7 @@ const BulkDeleteConfirmModal: React.FC<BulkDeleteConfirmModalProps> = ({
   isOpen, 
   selectedCount,
   onClose, 
-  onConfirm 
+  onConfirm
 }) => {
   if (!isOpen) return null;
 
@@ -20,22 +20,36 @@ const BulkDeleteConfirmModal: React.FC<BulkDeleteConfirmModalProps> = ({
             <FontAwesomeIcon icon={faExclamationTriangle} className={styles.warningIconSvg} />
           </div>
           <h3 className={styles.modalTitle}>Подтвердите массовое удаление</h3>
-          <button className={styles.closeButton} onClick={onClose} aria-label="Закрыть">
+          <button 
+            className={styles.closeButton} 
+            onClick={onClose}
+            aria-label="Закрыть"
+          >
             <FontAwesomeIcon icon={faTimes} className={styles.closeIcon} />
           </button>
         </div>
-        
         <div className={styles.modalContent}>
-          <p className={styles.warningText}>
-            Вы уверены, что хотите удалить <strong>{selectedCount} товаров</strong>?
+         <p className={styles.warningText}>
+         <strong>Удалите все товары из этой категории.</strong>
           </p>
-          <p className={styles.warningHint}>Это действие нельзя отменить.</p>
+          <p className={styles.warningText}>
+            Вы уверены, что хотите удалить <strong>{selectedCount} категорий</strong>?
+          </p>
+          <p className={styles.warningHint}>
+            Это действие нельзя отменить. 
+          </p>
           
           <div className={styles.actions}>
-            <button className={styles.cancelButton} onClick={onClose}>
+            <button 
+              className={styles.cancelButton} 
+              onClick={onClose}
+            >
               Отменить
             </button>
-            <button className={styles.confirmButton} onClick={onConfirm}>
+            <button 
+              className={styles.confirmButton} 
+              onClick={onConfirm}
+            >
               <FontAwesomeIcon icon={faTrashAlt} className={styles.icon} />
               Да, удалить
             </button>

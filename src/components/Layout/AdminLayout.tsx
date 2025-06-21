@@ -22,6 +22,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           <h3>PC Store Admin</h3>
           <p className={styles.adminSubtitle}>Панель управления</p>
         </div>
+
         <nav className={styles.navMenu}>
           <Link to={ROUTES.HOME} className={styles.navItem}>
             <span>Главная</span>
@@ -33,13 +34,19 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <span>Категории</span>
           </Link>
         </nav>
+
         <div className={styles.logoutContainer}>
-          <button onClick={handleLogout} className={styles.logoutButton}>
-            <span><span>&#8617;</span> Выйти из системы</span>
+          <button 
+            onClick={handleLogout} 
+            className={styles.logoutButton}
+          >
+            <span>
+              <span>&#8617;</span> Выйти из системы
+            </span>
           </button>
         </div>
       </aside>
-        
+      
       <main className={styles.content}>
         {children}
       </main>

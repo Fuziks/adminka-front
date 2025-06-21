@@ -16,17 +16,20 @@ export interface SortConfig {
 
 
 export interface CategoryFormProps {
-  category?: any;
-  onSubmit: (data: any) => void;
+  category?: Category | null;
+  onSubmit: (data: { name: string }, shouldClose?: boolean) => void;
   onCancel: () => void;
 }
 
 export interface CategoriesTableProps {
   categories: Category[];
   sortConfig: SortConfig;
+  selectedIds: number[];
   onSort: (key: string, direction: 'asc' | 'desc') => void;
   onEdit: (category: Category) => void;
   onDelete: (id: number) => void;
+  onSelect: (id: number, isSelected: boolean) => void;
+  onSelectAll: (isSelected: boolean) => void;
 }
 
 export interface DeleteConfirmModalProps {
@@ -34,4 +37,11 @@ export interface DeleteConfirmModalProps {
   onClose: () => void;
   onConfirm: () => void;
   itemName?: string;
+}
+
+export interface BulkDeleteConfirmModalProps {
+  isOpen: boolean;
+  selectedCount: number;
+  onClose: () => void;
+  onConfirm: () => void;
 }

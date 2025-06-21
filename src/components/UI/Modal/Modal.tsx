@@ -2,7 +2,13 @@ import React, { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import styles from './Modal.module.css';
-import { ModalProps } from '../types'
+import { ModalProps } from '../types';
+
+const sizeClasses = {
+  sm: styles.modalSm,
+  md: styles.modalMd,
+  lg: styles.modalLg
+};
 
 const Modal: React.FC<ModalProps> = ({ 
   isOpen, 
@@ -12,17 +18,11 @@ const Modal: React.FC<ModalProps> = ({
   size = 'md'
 }) => {
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
+    const handleEscape = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
 
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       document.addEventListener('keydown', handleEscape);
-    } else {
-      document.body.style.overflow = 'auto';
     }
 
     return () => {
@@ -32,12 +32,6 @@ const Modal: React.FC<ModalProps> = ({
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
-
-  const sizeClasses = {
-    sm: styles.modalSm,
-    md: styles.modalMd,
-    lg: styles.modalLg
-  };
 
   return (
     <div className={styles.modalOverlay}>
@@ -49,7 +43,7 @@ const Modal: React.FC<ModalProps> = ({
             onClick={onClose}
             aria-label="Close modal"
           >
-            <FontAwesomeIcon icon={faTimes} className={styles.closeIcon} />
+            <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
         <div className={styles.modalContent}>

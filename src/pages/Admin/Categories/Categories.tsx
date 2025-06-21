@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Snackbar, Alert, Skeleton, Pagination } from '@mui/material';
-import { useCategories } from './hooks/useCategories';
-import CategoriesTable from './components/CategoriesTable/CategoriesTable';
-import DeleteConfirmModal from './components/DeleteConfirmModal/DeleteConfirmModal';
-import Modal from '../../../components/UI/Modal/Modal';
-import CategoryForm from './components/CategoryForm/CategoryForm';
-import { Category } from './types';
-import styles from './Categories.module.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faArrowLeft, 
   faPlus, 
   faCheckCircle, 
-  faExclamationCircle 
+  faExclamationCircle,
+  faTrashAlt
 } from '@fortawesome/free-solid-svg-icons';
+
+import { useCategories } from './hooks/useCategories';
+import CategoriesTable from './components/CategoriesTable/CategoriesTable';
+import DeleteConfirmModal from './components/DeleteConfirmModal/DeleteConfirmModal';
+import BulkDeleteConfirmModal from './components/BulkDeleteConfirmModal/BulkDeleteConfirmModal';
+import Modal from '../../../components/UI/Modal/Modal';
+import CategoryForm from './components/CategoryForm/CategoryForm';
+import { Category } from './types';
+import styles from './Categories.module.css';
 
 const CategoriesPage: React.FC = () => {
   const {
@@ -27,17 +30,41 @@ const CategoriesPage: React.FC = () => {
     sortConfig,
     fetchCategories,
     createCategory,
-    updateCategory,
     deleteCategory,
+    bulkDelete,
     setSortConfig,
     setPagination
   } = useCategories();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
+  const [currentCategory, setCurrentCategory] = useState<Category | undefined>();
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<number | null>(null);
   const [isChangingLimit, setIsChangingLimit] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [isBulkDeleteConfirmOpen, setIsBulkDeleteConfirmOpen] = useState(false);
+
+  const handleSelect = (id: number, isSelected: boolean) => {
+    setSelectedIds(prev => 
+      isSelected ? [...prev, id] : prev.filter(item => item !== id)
+    );
+  };
+
+  const handleSelectAll = (isSelected: boolean) => {
+    setSelectedIds(isSelected ? categories.map(c => c.id) : []);
+  };
+
+  const handleBulkDelete = async () => {
+    setIsBulkDeleteConfirmOpen(false);
+    if (selectedIds.length < 2) return;
+    await bulkDelete(selectedIds);
+    setSelectedIds([]);
+  };
+
+  const handleEdit = (category: Category) => {
+    setCurrentCategory(category);
+    setIsModalOpen(true);
+  };
 
   const handlePageChange = (page: number) => {
     fetchCategories(page, pagination.limit, sortConfig.key, sortConfig.direction);
@@ -49,12 +76,7 @@ const CategoriesPage: React.FC = () => {
   };
 
   const handleCreate = () => {
-    setCurrentCategory(null);
-    setIsModalOpen(true);
-  };
-
-  const handleEdit = (category: Category) => {
-    setCurrentCategory(category);
+    setCurrentCategory(undefined);
     setIsModalOpen(true);
   };
 
@@ -70,23 +92,16 @@ const CategoriesPage: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (categoryData: { name: string }) => {
-    const exists = categories.some(c => 
-      c.name.toLowerCase() === categoryData.name.toLowerCase() && 
-      (!currentCategory || c.id !== currentCategory.id)
-    );
-    
-    if (exists) {
+  const handleSubmit = async (categoryData: { name: string }, shouldClose = true) => {
+    try {
+      if (currentCategory) return false;
+      
+      await createCategory(categoryData);
+      shouldClose ? setIsModalOpen(false) : setCurrentCategory(undefined);
+      return true;
+    } catch {
       return false;
     }
-  
-    if (currentCategory) {
-      await updateCategory(currentCategory.id, categoryData);
-    } else {
-      await createCategory(categoryData);
-    }
-    setIsModalOpen(false);
-    return true;
   };
 
   const handleLimitChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -106,7 +121,7 @@ const CategoriesPage: React.FC = () => {
           <Skeleton variant="rectangular" width={150} height={40} />
         </div>
         {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} variant="rectangular" height={60} style={{ marginBottom: 10, borderRadius: 8 }} />
+          <Skeleton key={i} variant="rectangular" height={60} className={styles.skeletonRow} />
         ))}
       </div>
     );
@@ -132,6 +147,30 @@ const CategoriesPage: React.FC = () => {
         </div>
       </div>
 
+      <motion.div
+        className={styles.topControls}
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className={styles.bulkActions}>
+          <motion.button
+            className={`${styles.bulkButton} ${styles.bulkDeleteButton}`}
+            onClick={() => setIsBulkDeleteConfirmOpen(true)}
+            disabled={selectedIds.length < 2}
+            whileHover={selectedIds.length >= 2 ? { scale: 1.03 } : {}}
+            whileTap={selectedIds.length >= 2 ? { scale: 0.98 } : {}}
+          >
+            <FontAwesomeIcon icon={faTrashAlt} className={styles.bulkIcon} />
+            Удалить выбранные
+            {selectedIds.length > 1 && <span className={styles.badge}>{selectedIds.length}</span>}
+            {selectedIds.length < 2 && (
+              <span className={styles.tooltip}>Выберите 2 или более категорий для удаления</span>
+            )}
+          </motion.button>
+        </div>
+      </motion.div>
+
       <AnimatePresence mode='wait'>
         <motion.div
           key={`table-${pagination.limit}-${isChangingLimit}`}
@@ -144,9 +183,12 @@ const CategoriesPage: React.FC = () => {
           <CategoriesTable
             categories={categories}
             sortConfig={sortConfig}
+            selectedIds={selectedIds}
             onSort={handleSort}
-            onEdit={handleEdit}
+            onEdit={handleEdit} 
             onDelete={handleDeleteClick}
+            onSelect={handleSelect}
+            onSelectAll={handleSelectAll}
           />
         </motion.div>
       </AnimatePresence>
@@ -169,10 +211,9 @@ const CategoriesPage: React.FC = () => {
               className={styles.limitSelect}
               disabled={isChangingLimit}
             >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
+              {[5, 10, 20, 50].map(limit => (
+                <option key={limit} value={limit}>{limit}</option>
+              ))}
             </select>
           </motion.div>
           
@@ -209,10 +250,16 @@ const CategoriesPage: React.FC = () => {
         itemName={currentCategory?.name}
       />
 
+      <BulkDeleteConfirmModal
+        isOpen={isBulkDeleteConfirmOpen}
+        selectedCount={selectedIds.length}
+        onClose={() => setIsBulkDeleteConfirmOpen(false)}
+        onConfirm={handleBulkDelete}
+      />
+
       <Snackbar
         open={!!successMessage}
         autoHideDuration={6000}
-        onClose={() => {}}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <motion.div
@@ -232,7 +279,6 @@ const CategoriesPage: React.FC = () => {
       <Snackbar
         open={!!error}
         autoHideDuration={6000}
-        onClose={() => {}}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <motion.div

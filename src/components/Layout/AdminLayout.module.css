@@ -11,7 +11,6 @@
   color: white;
   display: flex;
   flex-direction: column;
-  position: relative;
 }
 
 .sidebarHeader {
@@ -48,23 +47,19 @@
   text-decoration: none;
   transition: all 0.2s ease;
   font-size: 32px;
+  transform: translateX(0);
 }
 
 .navItem:hover {
   background: rgba(255, 255, 255, 0.05);
   color: #3498db;
-}
-
-.navIcon {
-  margin-right: 12px;
-  font-size: 18rem;
+  transform: translateX(5px);
 }
 
 .logoutContainer {
   padding: 20px 25px 0;
   margin-top: auto;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  text-align: center;
 }
 
 .logoutButton {
@@ -83,8 +78,6 @@
   transition: all 0.3s;
   box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
   width: 100%;
-  max-width: 250px;
-  margin: 20px auto 0;
 }
 
 .logoutButton:hover {
@@ -93,23 +86,12 @@
   background: linear-gradient(90deg, #dc2626, #b91c1c);
 }
 
-
 .content {
   flex: 1;
   padding: 30px;
   background-color: #f5f7fa;
   overflow-y: auto;
 }
-
-
-.navItem {
-  transform: translateX(0);
-}
-
-.navItem:hover {
-  transform: translateX(5px);
-}
-
 
 @media (max-width: 768px) {
   .sidebar {

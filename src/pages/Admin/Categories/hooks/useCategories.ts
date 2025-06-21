@@ -6,7 +6,8 @@ import {
   deleteCategory,
   checkCategoryName,
   CreateCategoryDto,
-  UpdateCategoryDto
+  UpdateCategoryDto,
+  bulkDeleteCategories
 } from '../../../../api/categories';
 import { Category, Pagination, SortConfig } from '../types';
 
@@ -69,6 +70,21 @@ export const useCategories = () => {
     }
   };
 
+  const bulkDeleteHandler = useCallback(async (ids: number[]) => {
+    try {
+      setLoading(true);
+      await bulkDeleteCategories(ids);
+      showSuccess(`Успешно удалено ${ids.length} категорий`);
+      fetchCategories(pagination.page, pagination.limit);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Ошибка массового удаления';
+      showError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchCategories, pagination.page, pagination.limit, showSuccess, showError]);
+
   const createCategoryHandler = useCallback(async (categoryData: CreateCategoryDto) => {
     try {
       setLoading(true);
@@ -121,6 +137,7 @@ export const useCategories = () => {
       setLoading(false);
     }
   }, [fetchCategories, pagination.page, pagination.limit, showSuccess, showError]);
+  
 
   const deleteCategoryHandler = useCallback(async (id: number) => {
     try {
@@ -153,6 +170,7 @@ export const useCategories = () => {
     createCategory: createCategoryHandler,
     updateCategory: updateCategoryHandler,
     deleteCategory: deleteCategoryHandler,
+    bulkDelete: bulkDeleteHandler,
     checkCategoryExists,
     setSortConfig,
     setSelectedCategories,

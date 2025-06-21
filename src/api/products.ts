@@ -53,13 +53,15 @@ export const getProduct = async (id: number): Promise<Product> => {
   return response.data;
 };
 
-export const createProduct = async (productData: CreateProductDto): Promise<Product> => {
+export const createProduct = async (
+  productData: CreateProductDto
+): Promise<Product> => {
   const response = await apiClient.post<Product>('/products', productData);
   return response.data;
 };
 
 export const updateProduct = async (
-  id: number, 
+  id: number,
   productData: UpdateProductDto
 ): Promise<Product> => {
   const response = await apiClient.put<Product>(`/products/${id}`, productData);
@@ -75,13 +77,17 @@ export const bulkDeleteProducts = async (ids: number[]): Promise<void> => {
 };
 
 export const bulkUpdateProducts = async (
-  ids: number[], 
+  ids: number[],
   updateData: Partial<UpdateProductDto>
 ): Promise<void> => {
   await apiClient.post('/products/bulk-update', { ids, ...updateData });
 };
 
-export const checkProductName = async (name: string): Promise<CheckNameResponse> => {
-  const response = await apiClient.get<CheckNameResponse>(`/products/check-name/${encodeURIComponent(name)}`);
+export const checkProductName = async (
+  name: string
+): Promise<CheckNameResponse> => {
+  const response = await apiClient.get<CheckNameResponse>(
+    `/products/check-name/${encodeURIComponent(name)}`
+  );
   return response.data;
 };

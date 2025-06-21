@@ -4,21 +4,50 @@ import Table from '../../../../../components/UI/Table/Table';
 import styles from './CategoriesTable.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faBoxOpen, faPen } from '@fortawesome/free-solid-svg-icons';
-import { CategoriesTableProps } from '../../types'
+import { CategoriesTableProps } from '../../types';
 
 const CategoriesTable: React.FC<CategoriesTableProps> = ({
   categories,
   sortConfig,
+  selectedIds,
   onSort,
   onEdit,
-  onDelete
+  onDelete,
+  onSelect,
+  onSelectAll
 }) => {
   const columns = [
+    { 
+      header: (
+        <input
+          type="checkbox"
+          checked={categories.length > 0 && categories.every(c => selectedIds.includes(c.id))}
+          onChange={(e) => onSelectAll(e.target.checked)}
+          className={styles.checkbox}
+        />  
+      ),
+      accessor: 'select',
+      width: '50px',
+      headerClass: styles.checkboxHeader,
+      cellClass: styles.checkboxCell,
+      render: (item: Category) => (
+        <input
+          type="checkbox"
+          checked={selectedIds.includes(item.id)}
+          onChange={(e) => {
+            e.stopPropagation();
+            onSelect(item.id, e.target.checked);
+          }}
+          className={styles.checkbox}
+          onClick={(e) => e.stopPropagation()}
+        />
+      )
+    },
     { 
       header: 'ID', 
       accessor: 'id',
       sortable: true,
-      width: '75px',
+      width: '60px',
       headerClass: styles.tableHeader,
       cellClass: styles.idCell
     },
@@ -26,15 +55,15 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
       header: 'Название', 
       accessor: 'name',
       sortable: true,
-      width: '900px',
+      width: '800px',
       headerClass: styles.tableHeader,
-      cellClass: styles.nameCell
+      cellClass: styles.nameCell,
     },
     { 
       header: 'Действия', 
       accessor: 'actions',
       width: '200px',
-      headerClass: `${styles.tableHeader} ${styles.actionsHeader}`,
+      headerClass: styles.tableHeader,
       cellClass: styles.actionsCell,
       render: (item: Category) => (
         <div className={styles.actions}>
@@ -47,7 +76,7 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
             aria-label={`Редактировать ${item.name}`}
           >
             <FontAwesomeIcon icon={faPen} className={styles.icon} />
-            <span>Изменить</span>
+            Изменить
           </button>
           <button 
             className={styles.deleteButton}
@@ -58,7 +87,7 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
             aria-label={`Удалить ${item.name}`}
           >
             <FontAwesomeIcon icon={faTrashAlt} className={styles.icon} />
-            <span>Удалить</span>
+            Удалить
           </button>
         </div>
       )

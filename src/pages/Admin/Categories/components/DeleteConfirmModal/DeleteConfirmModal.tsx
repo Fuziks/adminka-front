@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faTimes, faTrash, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import styles from './DeleteConfirmModal.module.css';
 import { DeleteConfirmModalProps } from '../../types'
 
@@ -45,7 +45,7 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
               className={styles.confirmButton} 
               onClick={onConfirm}
             >
-              <FontAwesomeIcon icon={faTrash} className={styles.trashIcon} />
+              <FontAwesomeIcon icon={faTrashAlt} className={styles.icon} />
               Да, удалить
             </button>
           </div>

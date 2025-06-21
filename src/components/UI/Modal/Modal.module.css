@@ -1,4 +1,4 @@
-
+/* Modal.module.css */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -20,9 +20,9 @@
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  width: 800px;
-  max-width: 90%;
-  max-height: 1000px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -31,17 +31,9 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.modalSm {
-  max-width: 400px;
-}
-
-.modalMd {
-  max-width: 600px;
-}
-
-.modalLg {
-  max-width: 800px;
-}
+.modalSm { max-width: 400px; }
+.modalMd { max-width: 600px; }
+.modalLg { max-width: 800px; }
 
 .modalHeader {
   display: flex;
@@ -82,16 +74,15 @@
   color: #333;
 }
 
-.closeIcon {
-  font-size: 30px;
-}
-
 .modalContent {
   padding: 24px;
   flex-grow: 1;
   overflow-y: auto;
 }
 
+.modalContent > * {
+  animation: fadeInUp 0.4s ease-out 0.1s both;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -109,11 +100,6 @@
   }
 }
 
-
-.modalContent > * {
-  animation: fadeInUp 0.4s ease-out 0.1s both;
-}
-
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -125,41 +111,23 @@
   }
 }
 
-
 @media (max-width: 768px) {
   .modal {
     max-width: 95%;
-    max-height: 950px;
+    max-height: 90vh;
   }
   
-  .modalHeader {
-    padding: 16px 20px;
-  }
-  
-  .modalContent {
-    padding: 20px;
-  }
+  .modalHeader { padding: 16px 20px; }
+  .modalContent { padding: 20px; }
 }
 
 @media (max-width: 480px) {
-  .modalHeader {
-    padding: 14px 16px;
-  }
-  
-  .modalContent {
-    padding: 16px;
-  }
-  
-  .modalTitle {
-    font-size: 17px;
-  }
+  .modalHeader { padding: 14px 16px; }
+  .modalContent { padding: 16px; }
+  .modalTitle { font-size: 17px; }
   
   .closeButton {
     width: 36px;
     height: 36px;
-  }
-  
-  .closeIcon {
-    font-size: 18px;
   }
 }

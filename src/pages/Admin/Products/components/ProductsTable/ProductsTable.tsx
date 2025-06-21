@@ -4,8 +4,7 @@ import Table from '../../../../../components/UI/Table/Table';
 import styles from './ProductsTable.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faBoxOpen, faPen } from '@fortawesome/free-solid-svg-icons';
-import { ProductsTableProps } from '../../types'
-
+import { ProductsTableProps } from '../../types';
 
 const ProductsTable: React.FC<ProductsTableProps> = ({
   products,
@@ -18,50 +17,67 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
   onSelectAll
 }) => {
   const formatPrice = (price: number | string): string => {
-    if (typeof price === 'string') {
-      const numericValue = parseFloat(price.replace(/[^\d.]/g, ''));
-      return !isNaN(numericValue) ? `${numericValue.toLocaleString('ru-RU', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      })} ₽` : 'Н/Д';
-    }
-    return price.toLocaleString('ru-RU', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }) + ' ₽';
+    const numericValue = typeof price === 'string' 
+      ? parseFloat(price.replace(/[^\d.]/g, '')) 
+      : price;
+
+    return !isNaN(numericValue) 
+      ? `${numericValue.toLocaleString('ru-RU', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        })} ₽`
+      : 'Н/Д';
   };
 
   const getCategoryName = (category: Product['category']): string => {
-    if (!category) return 'Без категории';
-    return typeof category === 'string' ? category : category.name;
+    return !category ? 'Без категории' : typeof category === 'string' ? category : category.name;
   };
+
+  const renderCheckbox = (item?: Product) => (
+    <input
+      type="checkbox"
+      checked={item ? selectedIds.includes(item.id) : products.every(p => selectedIds.includes(p.id))}
+      onChange={(e) => item ? onSelect(item.id, e.target.checked) : onSelectAll(e.target.checked)}
+      className={styles.checkbox}
+      onClick={(e) => e.stopPropagation()}
+    />
+  );
+
+  const renderActions = (item: Product) => (
+    <div className={styles.actions}>
+      <button 
+        className={styles.editButton}
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit(item);
+        }}
+        aria-label={`Редактировать ${item.name}`}
+      >
+        <FontAwesomeIcon icon={faPen} className={styles.icon} />
+        Изменить
+      </button>
+      <button 
+        className={styles.deleteButton}
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete(item.id);
+        }}
+        aria-label={`Удалить ${item.name}`}
+      >
+        <FontAwesomeIcon icon={faTrashAlt} className={styles.icon} />
+        Удалить
+      </button>
+    </div>
+  );
 
   const columns = [
     { 
-      header: (
-        <input
-          type="checkbox"
-          checked={products.length > 0 && products.every(p => selectedIds.includes(p.id))}
-          onChange={(e) => onSelectAll(e.target.checked)}
-          className={styles.checkbox}
-        />
-      ),
+      header: renderCheckbox(),
       accessor: 'select',
       width: '50px',
       headerClass: styles.checkboxHeader,
       cellClass: styles.checkboxCell,
-      render: (item: Product) => (
-        <input
-          type="checkbox"
-          checked={selectedIds.includes(item.id)}
-          onChange={(e) => {
-            e.stopPropagation();
-            onSelect(item.id, e.target.checked);
-          }}
-          className={styles.checkbox}
-          onClick={(e) => e.stopPropagation()}
-        />
-      )
+      render: renderCheckbox
     },
     { 
       header: 'ID', 
@@ -114,32 +130,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
       width: '200px',
       headerClass: styles.tableHeader,
       cellClass: styles.actionsCell,
-      render: (item: Product) => (
-        <div className={styles.actions}>
-          <button 
-            className={styles.editButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(item);
-            }}
-            aria-label={`Редактировать ${item.name}`}
-          >
-            <FontAwesomeIcon icon={faPen} className={styles.icon} />
-            Изменить
-          </button>
-          <button 
-            className={styles.deleteButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(item.id);
-            }}
-            aria-label={`Удалить ${item.name}`}
-          >
-            <FontAwesomeIcon icon={faTrashAlt} className={styles.icon} />
-            Удалить
-          </button>
-        </div>
-      )
+      render: renderActions
     },
   ];
 

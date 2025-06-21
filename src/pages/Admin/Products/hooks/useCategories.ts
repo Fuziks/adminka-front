@@ -2,28 +2,33 @@ import { useState, useEffect } from 'react';
 import { getCategories } from '../../../../api/categories';
 import { Category } from '../types';
 
+const DEFAULT_PAGE = 1;
+const PAGE_LIMIT = 100;
+
 export const useCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const loadCategories = async (page = 1, limit = 100) => {
+  const fetchCategories = async (page = DEFAULT_PAGE, limit = PAGE_LIMIT) => {
     try {
-      setLoading(true);
-      const response = await getCategories(page, limit);
-      setCategories(prev => [...prev, ...response.data]);
-      if (response.data.length === limit) {
-        await loadCategories(page + 1, limit);
+      setIsLoading(true);
+      const { data } = await getCategories(page, limit);
+      
+      setCategories(prevCategories => [...prevCategories, ...data]);
+      
+      if (data.length === limit) {
+        await fetchCategories(page + 1, limit);
       }
-    } catch (err) {
-      console.error('Ошибка загрузки категорий:', err);
+    } catch (error) {
+      console.error('Failed to load categories:', error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    loadCategories();
+    fetchCategories();
   }, []);
 
-  return { categories, loading };
+  return { categories, isLoading };
 };

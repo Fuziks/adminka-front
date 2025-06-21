@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './BulkEditModal.module.css';
-import { BulkEditModalProps } from '../../types'
+import { BulkEditModalProps } from '../../types';
 
 const BulkEditModal: React.FC<BulkEditModalProps> = ({
   isOpen,
@@ -16,10 +16,9 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  if (!isOpen) return null;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     try {
       setIsSubmitting(true);
       setError('');
@@ -37,11 +36,15 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({
     }
   };
 
+  if (!isOpen) return null;
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modal}>
         <form onSubmit={handleSubmit} className={styles.form}>
-          <h1 className={styles.title}>Массовое редактирование ({selectedCount} товаров)</h1>
+          <h1 className={styles.title}>
+            Массовое редактирование ({selectedCount} товаров)
+          </h1>
           
           <div className={styles.formGroup}>
             <label className={styles.label}>Новая цена (руб.)</label>

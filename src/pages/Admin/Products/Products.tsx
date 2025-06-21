@@ -1,16 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Snackbar, Alert, Skeleton, Pagination } from '@mui/material';
-import { useProducts } from './hooks/useProducts';
-import { useCategories } from './hooks/useCategories';
-import ProductsTable from './components/ProductsTable/ProductsTable';
-import DeleteConfirmModal from './components/DeleteConfirmModal/DeleteConfirmModal';
-import BulkEditModal from './components/BulkEditModal/BulkEditModal';
-import BulkDeleteConfirmModal from './components/BulkDeleteConfirmModal/BulkDeleteConfirmModal';
-import Modal from '../../../components/UI/Modal/Modal';
-import ProductForm from './components/ProductForm/ProductForm';
-import { Product } from './types';
-import styles from './Products.module.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -21,6 +11,17 @@ import {
   faPen,
   faTrashAlt
 } from '@fortawesome/free-solid-svg-icons';
+
+import { useProducts } from './hooks/useProducts';
+import { useCategories } from './hooks/useCategories';
+import ProductsTable from './components/ProductsTable/ProductsTable';
+import DeleteConfirmModal from './components/DeleteConfirmModal/DeleteConfirmModal';
+import BulkEditModal from './components/BulkEditModal/BulkEditModal';
+import BulkDeleteConfirmModal from './components/BulkDeleteConfirmModal/BulkDeleteConfirmModal';
+import Modal from '../../../components/UI/Modal/Modal';
+import ProductForm from './components/ProductForm/ProductForm';
+import { Product } from './types';
+import styles from './Products.module.css';
 
 const ProductsPage: React.FC = () => {
   const {
@@ -49,14 +50,9 @@ const ProductsPage: React.FC = () => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isBulkEditOpen, setIsBulkEditOpen] = useState(false);
   const [isBulkDeleteConfirmOpen, setIsBulkDeleteConfirmOpen] = useState(false);
-  const [formData, setFormData] = useState({name: '', brand: '', price: '', categoryId: ''});
 
   const handleSelect = (id: number, isSelected: boolean) => {
-    setSelectedIds(prev => 
-      isSelected 
-        ? [...prev, id] 
-        : prev.filter(item => item !== id)
-    );
+    setSelectedIds(prev => isSelected ? [...prev, id] : prev.filter(item => item !== id));
   };
 
   const handleSelectAll = (isSelected: boolean) => {
@@ -109,27 +105,17 @@ const ProductsPage: React.FC = () => {
 
   const handleSubmit = async (productData: any, shouldClose: boolean = true) => {
     try {
-        if (currentProduct) {
-            await updateProduct(currentProduct.id, productData);
-            setIsModalOpen(false);
-        } else {
-            await createProduct(productData);
-            if (shouldClose) {
-                setIsModalOpen(false);
-            } else {
-                setCurrentProduct(null);
-                setFormData({
-                    name: '',
-                    brand: '',
-                    price: '',
-                    categoryId: ''
-                });
-            }
-        }
+      if (currentProduct) {
+        await updateProduct(currentProduct.id, productData);
+        setIsModalOpen(false);
+      } else {
+        await createProduct(productData);
+        shouldClose ? setIsModalOpen(false) : setCurrentProduct(null);
+      }
     } catch (err) {
-        console.error('Ошибка при сохранении товара:', err);
+      console.error('Ошибка при сохранении товара:', err);
     }
-};
+  };
 
   const handleLimitChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newLimit = Number(e.target.value);
@@ -181,7 +167,7 @@ const ProductsPage: React.FC = () => {
         transition={{ duration: 0.3 }}
       >
         <div className={styles.bulkActions}>
-        <motion.button
+          <motion.button
             className={`${styles.bulkButton} ${styles.bulkEditButton}`}
             onClick={() => setIsBulkEditOpen(true)}
             disabled={selectedIds.length < 2}
@@ -190,9 +176,7 @@ const ProductsPage: React.FC = () => {
           >
             <FontAwesomeIcon icon={faPen} className={styles.bulkIcon} />
             Массовое редактирование
-            {selectedIds.length > 1 && (
-              <span className={styles.badge}>{selectedIds.length}</span>
-            )}
+            {selectedIds.length > 1 && <span className={styles.badge}>{selectedIds.length}</span>}
             {selectedIds.length < 2 && (
               <span className={styles.tooltip}>Выберите 2 или более товаров для массового редактирования</span>
             )}
@@ -207,9 +191,7 @@ const ProductsPage: React.FC = () => {
           >
             <FontAwesomeIcon icon={faTrashAlt} className={styles.bulkIcon} />
             Удалить выбранные
-            {selectedIds.length > 1 && (
-              <span className={styles.badge}>{selectedIds.length}</span>
-            )}
+            {selectedIds.length > 1 && <span className={styles.badge}>{selectedIds.length}</span>}
             {selectedIds.length < 2 && (
               <span className={styles.tooltip}>Выберите 2 или более товаров для удаления</span>
             )}
@@ -218,7 +200,7 @@ const ProductsPage: React.FC = () => {
       </motion.div>
 
       <AnimatePresence mode='wait'>
-        <motion.div
+        <motion.div 
           key={`table-${pagination.limit}-${isChangingLimit}`}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -257,10 +239,9 @@ const ProductsPage: React.FC = () => {
               className={styles.limitSelect}
               disabled={isChangingLimit}
             >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
+              {[5, 10, 20, 50].map(limit => (
+                <option key={limit} value={limit}>{limit}</option>
+              ))}
             </select>
           </motion.div>
           
@@ -312,17 +293,8 @@ const ProductsPage: React.FC = () => {
         onConfirm={handleBulkDelete}
       />
 
-      <Snackbar
-        open={!!successMessage}
-        autoHideDuration={6000}
-        onClose={() => {}}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-        >
+      <Snackbar open={!!successMessage} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
           <Alert severity="success" icon={false} className={styles.successAlert}>
             <div className={styles.alertContent}>
               <FontAwesomeIcon icon={faCheckCircle} className={styles.successIcon} />
@@ -332,17 +304,8 @@ const ProductsPage: React.FC = () => {
         </motion.div>
       </Snackbar>
 
-      <Snackbar
-        open={!!error}
-        autoHideDuration={6000}
-        onClose={() => {}}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-        >
+      <Snackbar open={!!error} autoHideDuration={6000} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
           <Alert severity="error" icon={false} className={styles.errorAlert}>
             <div className={styles.alertContent}>
               <FontAwesomeIcon icon={faExclamationCircle} className={styles.errorIcon} />

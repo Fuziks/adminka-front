@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import styles from './Table.module.css';
-import { TableProps } from '../types'
+import { TableProps } from '../types';
 
 const Table: React.FC<TableProps> = ({ 
   data, 
@@ -14,7 +14,8 @@ const Table: React.FC<TableProps> = ({
 }) => {
   const handlePageChange = (page: number) => {
     if (!pagination) return;
-    if (page < 1 || page > Math.ceil(pagination.total / pagination.limit)) return;
+    const totalPages = Math.ceil(pagination.total / pagination.limit);
+    if (page < 1 || page > totalPages) return;
     pagination.onChange(page);
   };
 
@@ -27,87 +28,55 @@ const Table: React.FC<TableProps> = ({
     onSort(key, direction);
   };
 
-  const renderCellContent = (value: any) => {
+  const renderCellContent = (value: unknown) => {
     if (typeof value === 'object' && value !== null) {
       return JSON.stringify(value);
     }
-    return value;
+    return String(value);
   };
 
   const renderPaginationItems = () => {
     if (!pagination) return null;
     
-    const totalPages = Math.ceil(pagination.total / pagination.limit);
-    const currentPage = pagination.page;
+    const { total, limit, page } = pagination;
+    const totalPages = Math.ceil(total / limit);
     const items = [];
     
-    items.push(
+    const renderPageButton = (pageNum: number, isActive = false) => (
       <button
-        key={1}
-        onClick={() => handlePageChange(1)}
-        disabled={currentPage === 1 || isLoading}
-        className={currentPage === 1 ? styles.activePage : ''}
+        key={pageNum}
+        onClick={() => handlePageChange(pageNum)}
+        disabled={isLoading || isActive}
+        className={isActive ? styles.activePage : ''}
       >
-        1
+        {pageNum}
       </button>
     );
+
+    items.push(renderPageButton(1, page === 1));
     
-    if (currentPage > 3) {
+    if (page > 3) {
       items.push(<span key="left-ellipsis" className={styles.ellipsis}>...</span>);
     }
     
-    if (currentPage > 2) {
-      items.push(
-        <button
-          key={currentPage - 1}
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={isLoading}
-        >
-          {currentPage - 1}
-        </button>
-      );
+    if (page > 2) {
+      items.push(renderPageButton(page - 1));
     }
     
-    if (currentPage !== 1 && currentPage !== totalPages) {
-      items.push(
-        <button
-          key={currentPage}
-          className={styles.activePage}
-          onClick={() => handlePageChange(currentPage)}
-          disabled={isLoading}
-        >
-          {currentPage}
-        </button>
-      );
+    if (page !== 1 && page !== totalPages) {
+      items.push(renderPageButton(page, true));
     }
     
-    if (currentPage < totalPages - 1) {
-      items.push(
-        <button
-          key={currentPage + 1}
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={isLoading}
-        >
-          {currentPage + 1}
-        </button>
-      );
+    if (page < totalPages - 1) {
+      items.push(renderPageButton(page + 1));
     }
     
-    if (currentPage < totalPages - 2) {
+    if (page < totalPages - 2) {
       items.push(<span key="right-ellipsis" className={styles.ellipsis}>...</span>);
     }
     
     if (totalPages > 1) {
-      items.push(
-        <button
-          key={totalPages}
-          onClick={() => handlePageChange(totalPages)}
-          disabled={currentPage === totalPages || isLoading}
-          className={currentPage === totalPages ? styles.activePage : ''}
-        >
-          {totalPages}
-        </button>
-      );
+      items.push(renderPageButton(totalPages, page === totalPages));
     }
     
     return items;
@@ -125,22 +94,14 @@ const Table: React.FC<TableProps> = ({
   if (data.length === 0) {
     return (
       <div className={styles.emptyStateContainer}>
-        {emptyState || (
-          <div className={styles.defaultEmptyState}>
-            Нет данных для отображения
-          </div>
-        )}
+        {emptyState || <div className={styles.defaultEmptyState}>Нет данных для отображения</div>}
       </div>
     );
   }
 
   return (
     <div className={styles.tableContainer}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      >
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -169,13 +130,11 @@ const Table: React.FC<TableProps> = ({
                 key={item.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2, delay: index * 0.02 }}              >
+                transition={{ duration: 0.2, delay: index * 0.02 }}
+              >
                 {columns.map((column) => (
                   <td key={`${item.id}-${column.accessor}`}>
-                    {column.render 
-                      ? column.render(item) 
-                      : renderCellContent(item[column.accessor])
-                    }
+                    {column.render ? column.render(item) : renderCellContent(item[column.accessor])}
                   </td>
                 ))}
               </motion.tr>

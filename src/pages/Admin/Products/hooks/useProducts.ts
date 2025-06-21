@@ -20,15 +20,20 @@ export const useProducts = () => {
   const [pagination, setPagination] = useState<Pagination>({ page: 1, limit: 10, total: 0 });
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'id', direction: 'asc' });
 
-  const showSuccess = useCallback((message: string) => {
-    setSuccessMessage(message);
-    setTimeout(() => setSuccessMessage(''), 5000);
+  const showMessage = useCallback((setter: (msg: string) => void, message: string) => {
+    setter(message);
+    setTimeout(() => setter(''), 5000);
   }, []);
 
-  const showError = useCallback((message: string) => {
-    setError(message);
-    setTimeout(() => setError(''), 5000);
-  }, []);
+  const showSuccess = useCallback((message: string) => showMessage(setSuccessMessage, message), [showMessage]);
+  const showError = useCallback((message: string) => showMessage(setError, message), [showMessage]);
+
+  const handleApiError = useCallback((err: unknown, defaultMessage: string) => {
+    const errorMessage = err instanceof Error ? err.message : defaultMessage;
+    showError(errorMessage);
+    console.error(`${defaultMessage}:`, err);
+    throw err;
+  }, [showError]);
 
   const fetchProducts = useCallback(async (
     page: number, 
@@ -46,19 +51,13 @@ export const useProducts = () => {
       const response = await getProducts(page, limit, sortKey, sortOrder);
       
       setProducts(response.data);
-      setPagination(prev => ({
-        ...prev,
-        total: response.total,
-        page
-      }));
+      setPagination(prev => ({ ...prev, total: response.total, page }));
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Ошибка загрузки товаров';
-      showError(errorMessage);
-      console.error('Ошибка при загрузке товаров:', err);
+      handleApiError(err, 'Ошибка загрузки товаров');
     } finally {
       setLoading(false);
     }
-  }, [sortConfig.key, sortConfig.direction, showError]);
+  }, [sortConfig, handleApiError]);
 
   const checkProductExists = async (name: string) => {
     try {
@@ -70,91 +69,65 @@ export const useProducts = () => {
     }
   };
 
+  const withProductHandling = <T extends any[], R>(
+    handler: (...args: T) => Promise<R>,
+    successMessage: string
+  ) => {
+    return async (...args: T): Promise<R> => {
+      try {
+        setLoading(true);
+        const result = await handler(...args);
+        showSuccess(successMessage);
+        fetchProducts(pagination.page, pagination.limit);
+        return result;
+      } catch (err) {
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    };
+  };
+
   const createProductHandler = useCallback(async (productData: CreateProductDto) => {
-    try {
-      setLoading(true);
-      const createdProduct = await createProduct({
-        ...productData,
-        price: Number(productData.price)
+    const handler = async (data: CreateProductDto) => {
+      return await createProduct({
+        ...data,
+        price: Number(data.price)
       });
-      showSuccess('Товар успешно создан');
-      fetchProducts(pagination.page, pagination.limit);
-      return createdProduct;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Ошибка создания товара';
-      showError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchProducts, pagination.page, pagination.limit, showSuccess, showError]);
+    };
+    return withProductHandling(handler, 'Товар успешно создан')(productData);
+  }, [fetchProducts, pagination, showSuccess]);
 
   const updateProductHandler = useCallback(async (id: number, productData: UpdateProductDto) => {
-    try {
-      setLoading(true);
-      const data: UpdateProductDto = {
-        ...productData,
-        price: productData.price !== undefined ? Number(productData.price) : undefined
+    const handler = async (id: number, data: UpdateProductDto) => {
+      const updateData = {
+        ...data,
+        price: data.price !== undefined ? Number(data.price) : undefined
       };
-      const updatedProduct = await updateProduct(id, data);
-      showSuccess('Товар успешно обновлен');
-      fetchProducts(pagination.page, pagination.limit);
-      return updatedProduct;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Ошибка обновления товара';
-      showError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchProducts, pagination.page, pagination.limit, showSuccess, showError]);
+      return await updateProduct(id, updateData);
+    };
+    return withProductHandling(handler, 'Товар успешно обновлен')(id, productData);
+  }, [fetchProducts, pagination, showSuccess]);
 
   const deleteProductHandler = useCallback(async (id: number) => {
-    try {
-      setLoading(true);
-      await deleteProduct(id);
-      showSuccess('Товар успешно удален');
-      fetchProducts(pagination.page, pagination.limit);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Ошибка удаления товара';
-      showError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchProducts, pagination.page, pagination.limit, showSuccess, showError]);
+    return withProductHandling(deleteProduct, 'Товар успешно удален')(id);
+  }, [fetchProducts, pagination, showSuccess]);
 
   const bulkDeleteHandler = useCallback(async (ids: number[]) => {
-    try {
-      setLoading(true);
+    const handler = async (ids: number[]) => {
       await bulkDeleteProducts(ids);
-      showSuccess(`Успешно удалено ${ids.length} товаров`);
-      fetchProducts(pagination.page, pagination.limit);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Ошибка массового удаления';
-      showError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchProducts, pagination.page, pagination.limit, showSuccess, showError]);
+      return ids.length;
+    };
+    return withProductHandling(handler, `Успешно удалено ${ids.length} товаров`)(ids);
+  }, [fetchProducts, pagination, showSuccess]);
 
-  const bulkUpdateHandler = useCallback(async (
-    ids: number[], 
-    updateData: Partial<UpdateProductDto>
-  ): Promise<void> => {
-    try {
-      setLoading(true);
-      await bulkUpdateProducts(ids, updateData);
-      showSuccess(`Успешно обновлено ${ids.length} товаров`);
-      fetchProducts(pagination.page, pagination.limit);
-    } catch (err) {
-      showError('Ошибка массового обновления');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchProducts, pagination.page, pagination.limit, showSuccess, showError]);
+  const bulkUpdateHandler = useCallback(async (ids: number[], updateData: Partial<UpdateProductDto>) => {
+    const handler = async (ids: number[], data: Partial<UpdateProductDto>) => {
+      await bulkUpdateProducts(ids, data);
+      return ids.length;
+    };
+    return withProductHandling(handler, `Успешно обновлено ${ids.length} товаров`)(ids, updateData);
+  }, [fetchProducts, pagination, showSuccess]);
 
   useEffect(() => {
     fetchProducts(pagination.page, pagination.limit);

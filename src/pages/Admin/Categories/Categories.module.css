@@ -15,7 +15,7 @@
 
 .pageTitle {
   margin: 0;
-  font-size: 28px; 
+  font-size: 28px;
   font-weight: 700;
   color: #1e293b;
 }
@@ -88,7 +88,7 @@
 
 .resultsInfo {
   color: #64748b;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .paginationControls {
@@ -104,7 +104,7 @@
   align-items: center;
   gap: 8px;
   color: #64748b;
-  font-size: 14px; 
+  font-size: 15px;
   transition: transform 0.2s ease;
 }
 
@@ -113,7 +113,7 @@
   border-radius: 6px;
   border: 1px solid #e2e8f0;
   background-color: white;
-  font-size: 14px; 
+  font-size: 15px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -153,12 +153,90 @@
 
 .successIcon {
   color: #10b981;
-  font-size: 19.2px; 
+  font-size: 19px;
 }
 
 .errorIcon {
   color: #ef4444;
-  font-size: 19.2px; 
+  font-size: 19px;
+}
+
+.topControls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.bulkActions {
+  display: flex;
+  gap: 12px;
+}
+
+.bulkButton {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.bulkDeleteButton {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.bulkDeleteButton:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.bulkButton:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.badge {
+  margin-left: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.bulkDeleteButton .badge {
+  border: 1px solid #b91c1c;
+}
+
+.bulkDeleteButton:disabled .badge {
+  border: 1px solid #94a3b8;
+}
+
+.tooltip {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #334155;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.bulkButton:disabled:hover .tooltip {
+  opacity: 1;
 }
 
 @media (max-width: 768px) {
@@ -176,20 +254,63 @@
     justify-content: space-between;
   }
   
+  .topControls {
+    justify-content: flex-start;
+  }
+  
+  .bulkActions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
   .paginationControls {
     flex-direction: column;
     align-items: flex-start;
+  }
+  
+  .pageNumbers {
+    order: 1;
+    width: 100%;
+    justify-content: center;
+    margin: 8px 0;
+  }
+  
+  .navButton {
+    order: 2;
   }
 }
 
 @media (max-width: 480px) {
   .addButton {
     padding: 6px 12px !important;
-    font-size: 14px !important; 
+    font-size: 14px !important;
   }
   
   .backLink {
     padding: 6px 10px;
-    font-size: 14px; 
+    font-size: 14px;
   }
+  
+  .bulkButton {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+.tableEnter {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.tableExit {
+  animation: fadeOut 0.3s ease-out forwards;
 }

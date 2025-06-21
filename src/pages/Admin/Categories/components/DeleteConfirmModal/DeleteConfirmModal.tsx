@@ -29,6 +29,9 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
           </button>
         </div>
         <div className={styles.modalContent}>
+        <p className={styles.warningText}>
+         <strong>Перед этим удалите все товары из этой категории!</strong>
+          </p>
           <p className={styles.warningText}>
             Вы уверены, что хотите удалить {itemName ? <strong>"{itemName}"</strong> : 'эту категорию'}?
           </p>

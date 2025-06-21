@@ -30,7 +30,7 @@ const BulkDeleteConfirmModal: React.FC<BulkDeleteConfirmModalProps> = ({
         </div>
         <div className={styles.modalContent}>
          <p className={styles.warningText}>
-         <strong>Удалите все товары из этой категории.</strong>
+         <strong>Перед этим удалите все товары из этих категорий!</strong>
           </p>
           <p className={styles.warningText}>
             Вы уверены, что хотите удалить <strong>{selectedCount} категорий</strong>?
